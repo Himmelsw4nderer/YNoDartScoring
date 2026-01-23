@@ -1,0 +1,51 @@
+# Rust
+target/
+**/*.rs.bk
+*.pdb
+
+# Cargo lock files (keep for applications, ignore for libraries)
+# We'll keep Cargo.lock files for reproducible builds
+
+# Frontend specific
+frontend/dist/
+frontend/.trunk/
+
+# Backend specific
+backend/.env
+backend/.env.local
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Docker
+.dockerignore
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS
+Thumbs.db
+.Spotlight-V100
+.Trashes
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+
+# Build artifacts
+dist/
+build/
