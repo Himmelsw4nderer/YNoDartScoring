@@ -5,6 +5,7 @@ use web_sys::BeforeUnloadEvent;
 
 
 mod components;
+mod views;
 mod utils;
 mod checkout;
 mod models;
@@ -13,15 +14,21 @@ mod logging;
 use models::LegState;
 use models::ThrowState;
 
-use components::ScoreInput;
-use components::ScoreBoard;
+use views::{GameView, HomeView};
+
+#[derive(Clone, PartialEq)]
+enum Route {
+    Home,
+    Game,
+}
 
 #[function_component(App)]
 fn app() -> Html {
+    let current_route = use_state(|| Route::Home);
     let leg_state = use_reducer(|| LegState::default());
     let throw_state = use_reducer(|| ThrowState::default());
 
-    let is_game_in_progress = leg_state.winner.is_none();
+    let is_game_in_progress = leg_state.winner.is_none() && *current_route == Route::Game;
 
     {
         let is_game_in_progress = is_game_in_progress.clone();
@@ -50,9 +57,12 @@ fn app() -> Html {
                     <span class="text-brand-text">{ "Scoring" }</span>
                 </h1>
                 <div class="h-2"></div>
-                <ScoreBoard />
-                <div class="flex-1"></div>
-                <ScoreInput />
+                {
+                    match *current_route {
+                        Route::Home => html! { <HomeView /> },
+                        Route::Game => html! { <GameView /> },
+                    }
+                }
                 </div>
             </div>
         </ContextProvider<UseReducerHandle<ThrowState>>>
