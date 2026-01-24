@@ -29,7 +29,7 @@ pub fn score_card(props: &ScoreCardProps) -> Html {
 
     if let Some(throw_score) = throw_state.get_clean_score(score) {
         score -= throw_score;
-    } else {
+    } else if is_turn{
         is_bust = true;
     }
 
