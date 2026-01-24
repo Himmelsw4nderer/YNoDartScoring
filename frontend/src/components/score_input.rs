@@ -230,7 +230,7 @@ pub fn score_input() -> Html {
             </span>
             </td>
             <td class="w-1/4 text-right text-brand-bg order-l border-brand-bg">
-            <button class="p-3 w-full h-full text-center text-brand-bg text-xl" onclick={on_submit_throw}>{ "Submit" }</button>
+            <button class="p-3 p-y-5 w-full h-full text-center text-brand-bg text-xl" onclick={on_submit_throw}>{ "Submit" }</button>
             </td>
             </tr>
         </tbody>
@@ -243,7 +243,7 @@ pub fn score_input() -> Html {
                     <tr>
                         <td
                             class={format!(
-                                "p-3 w-1/5 cursor-pointer border-b-4 {}",
+                                "p-3 p-y-5 w-1/5 cursor-pointer border-b-4 {}",
                                 if *active_multiplier == 1 { "border-b-brand-text" } else { "border-b-transparent" }
                             )}
                             onclick={
@@ -255,7 +255,7 @@ pub fn score_input() -> Html {
                         </td>
                         <td
                             class={format!(
-                                "p-3 w-1/5 cursor-pointer border-b-4 {}",
+                                "p-3 p-y-5 w-1/5 cursor-pointer border-b-4 {}",
                                 if *active_multiplier == 2 { "border-b-brand-secondary" } else { "border-b-transparent" }
                             )}
                             onclick={
@@ -279,7 +279,7 @@ pub fn score_input() -> Html {
                         </td>
                         <td
                             class={format!(
-                                "p-3 w-1/5 border-b-4 border-b-transparent {}",
+                                "p-3 p-y-5 w-1/5 border-b-4 border-b-transparent {}",
                                 if *active_multiplier == 3 { "cursor-not-allowed opacity-50" } else { "cursor-pointer" }
                             )}
                             onclick={
@@ -301,7 +301,7 @@ pub fn score_input() -> Html {
                         </td>
                         <td
                             class={format!(
-                                "p-3 w-1/5 border-b-4 border-b-transparent {}",
+                                "p-3 p-y-5 w-1/5 border-b-4 border-b-transparent {}",
                                 if *active_multiplier == 1 { "cursor-pointer" } else { "cursor-not-allowed opacity-50" }
                             )}
                             onclick={
@@ -325,7 +325,7 @@ pub fn score_input() -> Html {
 
                     <tr>
                         <td
-                            class="p-3 w-1/5 cursor-pointer"
+                            class="py-5 px-3 w-1/5 cursor-pointer"
                             onclick={
                                 let cb = on_score_click.clone();
                                 Callback::from(move |_| cb.emit(Button::Number(1)))
@@ -334,7 +334,7 @@ pub fn score_input() -> Html {
                             <button class="w-full h-full text-center text-brand-text">{ "1" }</button>
                         </td>
                         <td
-                            class="p-3 w-1/5 cursor-pointer"
+                            class="py-5 px-3 w-1/5 cursor-pointer"
                             onclick={
                                 let cb = on_score_click.clone();
                                 Callback::from(move |_| cb.emit(Button::Number(2)))
@@ -343,7 +343,7 @@ pub fn score_input() -> Html {
                             <button class="w-full h-full text-center text-brand-text">{ "2" }</button>
                         </td>
                         <td
-                            class="p-3 w-1/5 cursor-pointer"
+                            class="py-5 px-3 w-1/5 cursor-pointer"
                             onclick={
                                 let cb = on_score_click.clone();
                                 Callback::from(move |_| cb.emit(Button::Number(3)))
@@ -352,7 +352,7 @@ pub fn score_input() -> Html {
                             <button class="w-full h-full text-center text-brand-text">{ "3" }</button>
                         </td>
                         <td
-                            class="p-3 w-1/5 cursor-pointer"
+                            class="py-5 px-3 w-1/5 cursor-pointer"
                             onclick={
                                 let cb = on_score_click.clone();
                                 Callback::from(move |_| cb.emit(Button::Number(4)))
@@ -361,7 +361,7 @@ pub fn score_input() -> Html {
                             <button class="w-full h-full text-center text-brand-text">{ "4" }</button>
                         </td>
                         <td
-                            class="p-3 w-1/5 cursor-pointer"
+                            class="py-5 px-3 w-1/5 cursor-pointer"
                             onclick={
                                 let cb = on_score_click.clone();
                                 Callback::from(move |_| cb.emit(Button::Number(5)))
@@ -372,7 +372,7 @@ pub fn score_input() -> Html {
                     </tr>
                     <tr>
                         <td
-                            class="p-3 w-1/5 cursor-pointer"
+                            class="py-5 px-3 w-1/5 cursor-pointer"
                             onclick={
                                 let cb = on_score_click.clone();
                                 Callback::from(move |_| cb.emit(Button::Number(6)))
@@ -381,7 +381,7 @@ pub fn score_input() -> Html {
                             <button class="w-full h-full text-center text-brand-text">{ "6" }</button>
                         </td>
                         <td
-                            class="p-3 w-1/5 cursor-pointer"
+                            class="py-5 px-3 w-1/5 cursor-pointer"
                             onclick={
                                 let cb = on_score_click.clone();
                                 Callback::from(move |_| cb.emit(Button::Number(7)))
@@ -390,7 +390,7 @@ pub fn score_input() -> Html {
                             <button class="w-full h-full text-center text-brand-text">{ "7" }</button>
                         </td>
                         <td
-                            class="p-3 w-1/5 cursor-pointer"
+                            class="py-5 px-3 w-1/5 cursor-pointer"
                             onclick={
                                 let cb = on_score_click.clone();
                                 Callback::from(move |_| cb.emit(Button::Number(8)))
@@ -399,7 +399,7 @@ pub fn score_input() -> Html {
                             <button class="w-full h-full text-center text-brand-text">{ "8" }</button>
                         </td>
                         <td
-                            class="p-3 w-1/5 cursor-pointer"
+                            class="py-5 px-3 w-1/5 cursor-pointer"
                             onclick={
                                 let cb = on_score_click.clone();
                                 Callback::from(move |_| cb.emit(Button::Number(9)))
@@ -408,7 +408,7 @@ pub fn score_input() -> Html {
                             <button class="w-full h-full text-center text-brand-text">{ "9" }</button>
                         </td>
                         <td
-                            class="p-3 w-1/5 cursor-pointer"
+                            class="py-5 px-3 w-1/5 cursor-pointer"
                             onclick={
                                 let cb = on_score_click.clone();
                                 Callback::from(move |_| cb.emit(Button::Number(10)))
@@ -419,7 +419,7 @@ pub fn score_input() -> Html {
                     </tr>
                     <tr>
                         <td
-                            class="p-3 w-1/5 cursor-pointer"
+                            class="py-5 px-3 w-1/5 cursor-pointer"
                             onclick={
                                 let cb = on_score_click.clone();
                                 Callback::from(move |_| cb.emit(Button::Number(11)))
@@ -428,7 +428,7 @@ pub fn score_input() -> Html {
                             <button class="w-full h-full text-center text-brand-text">{ "11" }</button>
                         </td>
                         <td
-                            class="p-3 w-1/5 cursor-pointer"
+                            class="py-5 px-3 w-1/5 cursor-pointer"
                             onclick={
                                 let cb = on_score_click.clone();
                                 Callback::from(move |_| cb.emit(Button::Number(12)))
@@ -437,7 +437,7 @@ pub fn score_input() -> Html {
                             <button class="w-full h-full text-center text-brand-text">{ "12" }</button>
                         </td>
                         <td
-                            class="p-3 w-1/5 cursor-pointer"
+                            class="py-5 px-3 w-1/5 cursor-pointer"
                             onclick={
                                 let cb = on_score_click.clone();
                                 Callback::from(move |_| cb.emit(Button::Number(13)))
@@ -446,7 +446,7 @@ pub fn score_input() -> Html {
                             <button class="w-full h-full text-center text-brand-text">{ "13" }</button>
                         </td>
                         <td
-                            class="p-3 w-1/5 cursor-pointer"
+                            class="py-5 px-3 w-1/5 cursor-pointer"
                             onclick={
                                 let cb = on_score_click.clone();
                                 Callback::from(move |_| cb.emit(Button::Number(14)))
@@ -455,7 +455,7 @@ pub fn score_input() -> Html {
                             <button class="w-full h-full text-center text-brand-text">{ "14" }</button>
                         </td>
                         <td
-                            class="p-3 w-1/5 cursor-pointer"
+                            class="py-5 px-3 w-1/5 cursor-pointer"
                             onclick={
                                 let cb = on_score_click.clone();
                                 Callback::from(move |_| cb.emit(Button::Number(15)))
@@ -466,7 +466,7 @@ pub fn score_input() -> Html {
                     </tr>
                     <tr>
                         <td
-                            class="p-3 w-1/5 cursor-pointer"
+                            class="py-5 px-3 w-1/5 cursor-pointer"
                             onclick={
                                 let cb = on_score_click.clone();
                                 Callback::from(move |_| cb.emit(Button::Number(16)))
@@ -475,7 +475,7 @@ pub fn score_input() -> Html {
                             <button class="w-full h-full text-center text-brand-text">{ "16" }</button>
                         </td>
                         <td
-                            class="p-3 w-1/5 cursor-pointer"
+                            class="py-5 px-3 w-1/5 cursor-pointer"
                             onclick={
                                 let cb = on_score_click.clone();
                                 Callback::from(move |_| cb.emit(Button::Number(17)))
@@ -484,7 +484,7 @@ pub fn score_input() -> Html {
                             <button class="w-full h-full text-center text-brand-text">{ "17" }</button>
                         </td>
                         <td
-                            class="p-3 w-1/5 cursor-pointer"
+                            class="py-5 px-3 w-1/5 cursor-pointer"
                             onclick={
                                 let cb = on_score_click.clone();
                                 Callback::from(move |_| cb.emit(Button::Number(18)))
@@ -493,7 +493,7 @@ pub fn score_input() -> Html {
                             <button class="w-full h-full text-center text-brand-text">{ "18" }</button>
                         </td>
                         <td
-                            class="p-3 w-1/5 cursor-pointer"
+                            class="py-5 px-3 w-1/5 cursor-pointer"
                             onclick={
                                 let cb = on_score_click.clone();
                                 Callback::from(move |_| cb.emit(Button::Number(19)))
@@ -502,7 +502,7 @@ pub fn score_input() -> Html {
                             <button class="w-full h-full text-center text-brand-text">{ "19" }</button>
                         </td>
                         <td
-                            class="p-3 w-1/5 cursor-pointer"
+                            class="py-5 px-3 w-1/5 cursor-pointer"
                             onclick={
                                 let cb = on_score_click.clone();
                                 Callback::from(move |_| cb.emit(Button::Number(20)))
