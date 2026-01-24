@@ -16,7 +16,7 @@ pub fn home_view() -> Html {
         <table class="border-separate border-spacing-1">
             <tr>
                 <td class="w-1/2 p-0">
-                    <button onclick={onclick} class="w-full h-full bg-brand-primary text-brand-text rounded-tl-2xl">
+                    <button onclick={onclick} class="w-full h-full bg-brand-primary text-brand-text rounded-tl-2xl flex flex-col">
                         <div class="text-left p-3 font-bold text-2xl flex justify-between items-center">
                             <table class="w-full">
                                 <tr>
@@ -29,13 +29,13 @@ pub fn home_view() -> Html {
                                 </tr>
                             </table>
                         </div>
-                        <div class="text-left p-3 text-sm">
+                        <div class="text-left p-3 text-sm h-16 flex items-center">
                             {"Game with a friend on the same device."}
                         </div>
                     </button>
                 </td>
                 <td class="w-1/2 p-0">
-                    <button disabled={true} class="h-full w-full bg-brand-secondary text-brand-text rounded-tr-2xl">
+                    <button disabled={true} class="h-full w-full bg-brand-secondary text-brand-text rounded-tr-2xl flex flex-col">
                         <div class="text-left p-3 font-bold text-2xl flex justify-between items-center">
                             <table class="w-full">
                                 <tr>
@@ -48,7 +48,7 @@ pub fn home_view() -> Html {
                                 </tr>
                             </table>
                         </div>
-                        <div class="text-left p-3 text-sm">
+                        <div class="text-left p-3 text-sm h-16 flex items-center">
                             {"Game with another players across the world."}
                         </div>
                     </button>

@@ -11,24 +11,17 @@ mod checkout;
 mod models;
 mod logging;
 
-use models::LegState;
-use models::ThrowState;
+use models::{LegState, ThrowState, Route, RouteState};
 
 use views::{GameView, HomeView};
 
-#[derive(Clone, PartialEq)]
-enum Route {
-    Home,
-    Game,
-}
-
 #[function_component(App)]
 fn app() -> Html {
-    let current_route = use_state(|| Route::Home);
+    let route_state = use_reducer(|| RouteState::default());
     let leg_state = use_reducer(|| LegState::default());
     let throw_state = use_reducer(|| ThrowState::default());
 
-    let is_game_in_progress = leg_state.winner.is_none() && *current_route == Route::Game;
+    let is_game_in_progress = leg_state.winner.is_none() && route_state.current == Route::Game;
 
     {
         let is_game_in_progress = is_game_in_progress.clone();
@@ -46,11 +39,12 @@ fn app() -> Html {
     }
 
     html! {
+        <ContextProvider<UseReducerHandle<RouteState>> context={route_state.clone()}>
         <ContextProvider<UseReducerHandle<LegState>> context={leg_state}>
         <ContextProvider<UseReducerHandle<ThrowState>> context={throw_state}>
             <div class="bg-brand-bg h-dvh flex items-center justify-center">
             <div class="bg-brand-bg p-1 max-w-4xl w-full h-dvh flex flex-col">
-                <h1 class="text-4xl font-bold text-center mb-8 p-3">
+                <h1 class="text-4xl font-bold text-center p-3">
                     <span class="text-brand-primary">{ "Y" }</span>
                     <span class="text-brand-secondary">{ "No" }</span>
                     <span class="text-brand-primary">{ "Dart" }</span>
@@ -58,7 +52,7 @@ fn app() -> Html {
                 </h1>
                 <div class="h-2"></div>
                 {
-                    match *current_route {
+                    match route_state.current {
                         Route::Home => html! { <HomeView /> },
                         Route::Game => html! { <GameView /> },
                     }
@@ -67,6 +61,7 @@ fn app() -> Html {
             </div>
         </ContextProvider<UseReducerHandle<ThrowState>>>
         </ContextProvider<UseReducerHandle<LegState>>>
+        </ContextProvider<UseReducerHandle<RouteState>>>
     }
 }
 
