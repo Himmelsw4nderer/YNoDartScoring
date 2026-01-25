@@ -1,7 +1,7 @@
 use yew::prelude::*;
 use std::rc::Rc;
 use crate::models::{PlayerState, ThrowState};
-use crate::log_info;
+use crate::{log_info};
 
 pub enum LegAction {
     ChangeThrow(usize, Option<usize>, ThrowState),
