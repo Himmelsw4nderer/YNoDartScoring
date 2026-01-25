@@ -7,6 +7,9 @@ pub enum LegAction {
     ChangeThrow(usize, Option<usize>, ThrowState),
     NextPlayer,
     SetStartingScore(i32),
+    AddPlayer,
+    RemovePlayer(usize),
+    SetPlayerName(usize, String),
 }
 
 #[derive(Clone, PartialEq)]
@@ -55,6 +58,27 @@ impl Reducible for LegState {
                 for player in &mut new_state.player_states {
                     player.set_starting_score(starting_score);
                 }
+                std::rc::Rc::new(new_state)
+            }
+            LegAction::SetPlayerName(player_index, name) => {
+                log_info!("Setting player {} name to {}", player_index, name);
+                let mut new_state = (*self).clone();
+                new_state.player_states[player_index].name = name;
+                std::rc::Rc::new(new_state)
+            }
+            LegAction::AddPlayer => {
+                log_info!("Adding Player to the game");
+                let mut new_state = (*self).clone();
+                let starting_score = new_state.player_states.first().map(|p| p.starting_score).unwrap_or(501);
+                let mut new_player = PlayerState::default();
+                new_player.set_starting_score(starting_score);
+                new_state.player_states.push(new_player);
+                std::rc::Rc::new(new_state)
+            }
+            LegAction::RemovePlayer(player_index) => {
+                log_info!("Removing Player {} from the game", player_index);
+                let mut new_state = (*self).clone();
+                new_state.player_states.remove(player_index);
                 std::rc::Rc::new(new_state)
             }
         }

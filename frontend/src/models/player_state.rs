@@ -12,7 +12,7 @@ impl Default for PlayerState {
     fn default() -> Self {
         let starting_score = 501;
         Self {
-            name: String::from("NoName"),
+            name: String::from(""),
             score: starting_score,
             starting_score: starting_score,
             throw_states: vec![],
