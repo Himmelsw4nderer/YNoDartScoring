@@ -38,7 +38,7 @@ pub fn player_setup() -> Html {
                     <button
                         onclick={on_remove_player}
                         disabled={player_count <= 2|| true}
-                        class="absolute left-0 w-10 h-10 bg-brand-bg border-2 border-brand-text text-brand-text rounded-l hover:bg-brand-primary disabled:opacity-50"
+                        class="absolute left-0 w-10 h-10 bg-brand-bg border-2 border-brand-text text-brand-text"
                     >
                         <i class="ti ti-minus"></i>
                     </button>
@@ -51,7 +51,7 @@ pub fn player_setup() -> Html {
                     <button
                         onclick={on_add_player}
                         disabled={player_count >= 10 || true}
-                        class="absolute right-0 w-10 h-10 bg-brand-bg border-2 border-brand-text text-brand-text rounded-r hover:bg-brand-primary"
+                        class="absolute right-0 w-10 h-10 bg-brand-bg border-2 border-brand-text text-brand-text"
                     >
                         <i class="ti ti-plus"></i>
                     </button>
@@ -79,7 +79,7 @@ pub fn player_setup() -> Html {
                                     value={player.name.clone()}
                                     oninput={on_name_change}
                                     placeholder={format!("Player {}", index + 1)}
-                                    class="w-full bg-brand-bg border-2 border-brand-primary text-brand-text rounded py-2 pl-10 pr-4 focus:outline-none focus:border-brand-secondary placeholder-brand-text/50"
+                                    class="w-full bg-brand-bg border-2 border-brand-text text-brand-text rounded py-2 pl-10 pr-4 focus:outline-none focus:border-brand-primary placeholder-brand-text/50"
                                 />
                             </div>
                         }
