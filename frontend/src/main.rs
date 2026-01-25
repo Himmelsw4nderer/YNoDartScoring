@@ -10,10 +10,11 @@ mod utils;
 mod checkout;
 mod models;
 mod logging;
+mod hooks;
 
 use models::{LegState, ThrowState, Route, RouteState};
 
-use views::{GameView, HomeView};
+use views::{GameView, HomeView, SetupView, WinView};
 
 #[function_component(App)]
 fn app() -> Html {
@@ -55,6 +56,8 @@ fn app() -> Html {
                     match route_state.current {
                         Route::Home => html! { <HomeView /> },
                         Route::Game => html! { <GameView /> },
+                        Route::Setup => html! { <SetupView /> },
+                        Route::Win => html! { <WinView /> },
                     }
                 }
                 </div>

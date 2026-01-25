@@ -1,22 +1,17 @@
 use yew::prelude::*;
-use crate::models::{RouteState, RouteAction, Route};
+use crate::models::Route;
+use crate::hooks::use_navigator;
 
 #[function_component(HomeView)]
 pub fn home_view() -> Html {
-    let route_state = use_context::<UseReducerHandle<RouteState>>().expect("RouteState context not found");
+    let navigator = use_navigator();
 
-    let onclick = {
-        let route_state = route_state.clone();
-        Callback::from(move |_| {
-            route_state.dispatch(RouteAction::Navigate(Route::Game));
-        })
-    };
 
     html! {
         <table class="border-separate border-spacing-1">
             <tr>
                 <td class="w-1/2 p-0">
-                    <button onclick={onclick} class="w-full h-full bg-brand-primary text-brand-text rounded-tl-2xl flex flex-col">
+                    <button onclick={navigator(Route::Setup)} class="w-full h-full bg-brand-primary text-brand-text rounded-tl-2xl flex flex-col">
                         <div class="text-left p-3 font-bold text-2xl flex justify-between items-center">
                             <table class="w-full">
                                 <tr>

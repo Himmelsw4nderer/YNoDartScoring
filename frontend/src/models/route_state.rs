@@ -7,6 +7,8 @@ use crate::log_info;
 pub enum Route {
     Home,
     Game,
+    Setup,
+    Win,
 }
 
 impl Route {
@@ -14,6 +16,8 @@ impl Route {
         match self {
             Route::Home => "Home",
             Route::Game => "Game",
+            Route::Setup => "Setup",
+            Route::Win => "Win",
         }
     }
 }
