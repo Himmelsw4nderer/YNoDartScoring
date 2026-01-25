@@ -59,4 +59,10 @@ impl PlayerState {
         }
         average
     }
+
+    pub fn set_starting_score(&mut self, starting_score: i32) {
+        self.starting_score = starting_score;
+        self.score = starting_score;
+        self.throw_states.clear();
+    }
 }

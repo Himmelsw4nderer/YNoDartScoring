@@ -1,5 +1,5 @@
 use yew::prelude::*;
-use crate::components::{GameModeSelector, PlayerSetup};
+use crate::components::{StartingScoreSelector, PlayerSetup};
 use crate::hooks::use_navigator;
 use crate::models::Route;
 
@@ -10,7 +10,7 @@ pub fn setup_view() -> Html {
     html! {
         <div class="flex-1 flex flex-col items-center justify-start p-4 w-full max-w-lg mx-auto overflow-y-auto">
 
-            <GameModeSelector />
+            <StartingScoreSelector />
 
             <PlayerSetup />
 

@@ -24,20 +24,17 @@ fn app() -> Html {
 
     let is_game_in_progress = leg_state.winner.is_none() && route_state.current == Route::Game;
 
-    {
-        let is_game_in_progress = is_game_in_progress.clone();
-        use_effect(move || {
-            let listener = EventListener::new(&gloo::utils::window(), "beforeunload", move |e| {
-                if is_game_in_progress {
-                    if let Some(event) = e.dyn_ref::<BeforeUnloadEvent>() {
-                        event.prevent_default();
-                        event.set_return_value("A game is in progress. Are you sure you want to leave?");
-                    }
+    use_effect_with(is_game_in_progress, |&is_game_in_progress| {
+        let listener = EventListener::new(&gloo::utils::window(), "beforeunload", move |e| {
+            if is_game_in_progress {
+                if let Some(event) = e.dyn_ref::<BeforeUnloadEvent>() {
+                    event.prevent_default();
+                    event.set_return_value("A game is in progress. Are you sure you want to leave?");
                 }
-            });
-            || drop(listener)
+            }
         });
-    }
+        move || drop(listener)
+    });
 
     html! {
         <ContextProvider<UseReducerHandle<RouteState>> context={route_state.clone()}>

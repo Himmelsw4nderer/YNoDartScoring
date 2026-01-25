@@ -6,6 +6,7 @@ use crate::{log_info};
 pub enum LegAction {
     ChangeThrow(usize, Option<usize>, ThrowState),
     NextPlayer,
+    SetStartingScore(i32),
 }
 
 #[derive(Clone, PartialEq)]
@@ -46,6 +47,14 @@ impl Reducible for LegState {
                 let mut new_state = (*self).clone();
                 new_state.current_player = (new_state.current_player + 1) % new_state.player_states.len();
                 log_info!("Next player: {} -> {}", self.current_player, new_state.current_player);
+                std::rc::Rc::new(new_state)
+            }
+            LegAction::SetStartingScore(starting_score) => {
+                log_info!("Setting starting score to {}", starting_score);
+                let mut new_state = (*self).clone();
+                for player in &mut new_state.player_states {
+                    player.set_starting_score(starting_score);
+                }
                 std::rc::Rc::new(new_state)
             }
         }
