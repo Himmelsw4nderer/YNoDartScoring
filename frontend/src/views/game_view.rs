@@ -1,11 +1,11 @@
 use yew::prelude::*;
 use crate::components::{ScoreInput, ScoreBoard};
-use crate::models::{LegState, Route, RouteState, RouteAction};
+use crate::models::{GameState, Route, RouteState, RouteAction};
 use crate::log_error;
 
 #[function_component(GameView)]
 pub fn game_view() -> Html {
-    let Some(leg_state) = use_context::<UseReducerHandle<LegState>>() else {
+    let Some(game_state) = use_context::<UseReducerHandle<GameState>>() else {
         log_error!("LegState context not found - cannot render GameView");
         return html! { <div>{"Error: Context not available"}</div> };
     };
@@ -15,7 +15,7 @@ pub fn game_view() -> Html {
         return html! { <div>{"Error: Context not available"}</div> };
     };
 
-    use_effect_with(leg_state.winner, move |winner| {
+    use_effect_with(game_state.winner, move |winner| {
         log_error!("Checking winner: {:?}", winner);
         if winner.is_some() {
             route_state.dispatch(RouteAction::Navigate(Route::Win));

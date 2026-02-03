@@ -1,12 +1,12 @@
 use yew::prelude::*;
 use crate::hooks::use_navigator;
 use crate::models::Route;
-use crate::models::{LegState};
+use crate::models::{GameState};
 use crate::log_error;
 
 #[function_component(WinView)]
 pub fn win_view() -> Html {
-    let Some(leg_state) = use_context::<UseReducerHandle<LegState>>() else {
+    let Some(game_state) = use_context::<UseReducerHandle<GameState>>() else {
         log_error!("LegState context not found - cannot render PlayerSetup");
         return html! { <div>{"Error: Context not available"}</div> };
     };
@@ -15,7 +15,7 @@ pub fn win_view() -> Html {
     html! {
         <div class="flex flex-col gap-4 items-center justify-center h-full">
             <h2 class="text-2xl font-bold text-center text-brand-text">
-                <span class="text-brand-primary">{ leg_state.player_states[leg_state.winner.unwrap()].name.clone() }</span>
+                <span class="text-brand-primary">{ game_state.players[game_state.winner.unwrap()].name.clone() }</span>
                 <span class="text-brand-text">{ " Won" }</span>
                 <span class="text-brand-secondary">{ "!!!" }</span>
             </h2>

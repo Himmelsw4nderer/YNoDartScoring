@@ -1,7 +1,7 @@
 use yew::prelude::*;
 use crate::utils::translate_multiplier_to_char;
 use crate::checkout::recommend_throws;
-use crate::models::{LegState, ThrowState};
+use crate::models::{GameState, Throw};
 use crate::log_error;
 
 
@@ -12,40 +12,27 @@ pub struct ScoreCardProps {
 
 #[function_component(ScoreCard)]
 pub fn score_card(props: &ScoreCardProps) -> Html {
-    let Some(throw_state) = use_context::<UseReducerHandle<ThrowState>>() else {
-        log_error!("ThrowState context not found - cannot render ScoreCard");
-        return html! { <div>{"Error: Context not available"}</div> };
-    };
 
-    let Some(leg_state) = use_context::<UseReducerHandle<LegState>>() else {
+    let Some(game_state) = use_context::<UseReducerHandle<GameState>>() else {
         log_error!("LegState context not found - cannot render ScoreCard");
         return html! { <div>{"Error: Context not available"}</div> };
     };
-    let player = &leg_state.player_states[props.player_index];
-    let is_turn = leg_state.current_player == props.player_index;
-    let mut is_bust = false;
+    let player = &game_state.players[props.player_index];
+    let is_turn = game_state.current_player == props.player_index;
+    let is_bust = false;
 
-    let mut score = player.score;
-
-    if let Some(throw_score) = throw_state.get_clean_score(score) {
-        score -= throw_score;
-    } else if is_turn{
-        is_bust = true;
-    }
-
-    if !is_turn{
-        score = player.score;
-    }
-
-    let current_throw_if_turn = if is_turn { Some((*throw_state).clone()) } else { None };
-    let recommended_throws = if is_bust { throw_state.current_throws.clone() } else { recommend_throws(score, current_throw_if_turn.clone()) };
-    let average = player.calculate_average(&current_throw_if_turn);
+    let score = game_state.get_score(Some(props.player_index), None, None).unwrap_or(1);
 
 
-    let started = leg_state.starting_player == props.player_index;
+    let recommended_throws: [Option<Throw>; 3] = [None, None, None]; // TODO implement
 
-    let last_throw = player.throw_states.last().map(|ts| ts.get_score()).unwrap_or(0);
-    let darts_thrown = player.throw_states.len() as i32 * 3 + throw_state.get_throw_amount();
+    let average = 0; // TODO implement
+
+
+    let started = true; // TODO implement
+
+    let last_visit_score = game_state.get_last_visit_score(Some(props.player_index), None, None).unwrap_or(0); // TODO implement
+    let darts_thrown = game_state.get_darts_thrown(Some(props.player_index), None, None).unwrap_or(0); // TODO implement
 
     html! {
         <div class={format!("border-y-4 p-3 w-1/2 {}",
@@ -176,7 +163,7 @@ pub fn score_card(props: &ScoreCardProps) -> Html {
                 </tr>
                 <tr>
                     <td>{"Last Throw"}</td>
-                    <td>{last_throw}</td>
+                    <td>{last_visit_score}</td>
                 </tr>
                 <tr>
                     <td>{"Thrown Darts"}</td>

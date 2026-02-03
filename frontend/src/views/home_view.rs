@@ -11,7 +11,7 @@ pub fn home_view() -> Html {
         <table class="border-separate border-spacing-1">
             <tr>
                 <td class="w-1/2 p-0">
-                    <button onclick={navigator(Route::Setup)} class="w-full h-full bg-brand-primary text-brand-text rounded-tl-2xl flex flex-col">
+                    <button onclick={navigator(Route::Game)} class="w-full h-full bg-brand-primary text-brand-text rounded-tl-2xl flex flex-col">
                         <div class="text-left p-3 font-bold text-2xl flex justify-between items-center">
                             <table class="w-full">
                                 <tr>
