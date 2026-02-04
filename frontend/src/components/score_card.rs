@@ -1,4 +1,5 @@
 use yew::prelude::*;
+use crate::models::game::leg;
 use crate::utils::translate_multiplier_to_char;
 use crate::checkout::recommend_throws;
 use crate::models::{GameState, Throw};
@@ -19,14 +20,15 @@ pub fn score_card(props: &ScoreCardProps) -> Html {
     };
     let player = &game_state.players[props.player_index];
     let is_turn = game_state.current_player == props.player_index;
-    let is_bust = false;
 
-    let score = game_state.get_score(Some(props.player_index), None, None).unwrap_or(1);
-
+    let score = game_state.get_leg_score(Some(props.player_index), None, None).unwrap_or(0);
+    let is_bust = game_state.is_leg_bust(Some(props.player_index), None, None).unwrap_or(false);
 
     let recommended_throws: [Option<Throw>; 3] = [None, None, None]; // TODO implement
 
-    let average = 0; // TODO implement
+    let leg_average = game_state.get_leg_average(Some(props.player_index), None, None).unwrap_or(0.0);
+    let set_average = game_state.get_set_average(Some(props.player_index), None).unwrap_or(0.0);
+    let average = game_state.get_average(Some(props.player_index)).unwrap_or(0.0);
 
 
     let started = true; // TODO implement
@@ -157,6 +159,14 @@ pub fn score_card(props: &ScoreCardProps) -> Html {
         </table>
         <div class="h-1"></div>
             <table class="text-brand-text text-sm w-full">
+                <tr>
+                    <td>{"3 Dart-Avg. (Leg)"}</td>
+                    <td>{format!("{:.2}", leg_average)}</td>
+                </tr>
+                <tr>
+                    <td>{"3 Dart-Avg. (Set)"}</td>
+                    <td>{format!("{:.2}", set_average)}</td>
+                </tr>
                 <tr>
                     <td>{"3 Dart-Avg."}</td>
                     <td>{format!("{:.2}", average)}</td>

@@ -114,7 +114,7 @@ impl GameState {
             .get_throw(visit_index, throw_index)
     }
 
-    pub fn get_score(&self, player_index: Option<usize>, set_index: Option<usize>, leg_index: Option<usize>) -> Option<i32> {
+    pub fn get_leg_score(&self, player_index: Option<usize>, set_index: Option<usize>, leg_index: Option<usize>) -> Option<i32> {
         let player_index = player_index.unwrap_or(self.current_player);
         let set_index = set_index.unwrap_or(self.current_set);
         let leg_index = leg_index.unwrap_or(self.current_leg);
@@ -133,7 +133,7 @@ impl GameState {
         Some(self.players.get(player_index)?
             .sets.get(set_index)?
             .legs.get(leg_index)?
-            .get_darts_thrown()
+            .darts_thrown
         )
     }
 
@@ -146,5 +146,43 @@ impl GameState {
             .sets.get(set_index)?
             .legs.get(leg_index)?
             .get_last_visit_score()
+    }
+
+    pub fn is_leg_bust(&self, player_index: Option<usize>, set_index: Option<usize>, leg_index: Option<usize>) -> Option<bool> {
+        let player_index = player_index.unwrap_or(self.current_player);
+        let set_index = set_index.unwrap_or(self.current_set);
+        let leg_index = leg_index.unwrap_or(self.current_leg);
+
+        Some(self.players.get(player_index)?
+            .sets.get(set_index)?
+            .legs.get(leg_index)?
+            .is_bust)
+    }
+
+    pub fn get_leg_average(&self, player_index: Option<usize>, set_index: Option<usize>, leg_index: Option<usize>) -> Option<f32> {
+        let player_index = player_index.unwrap_or(self.current_player);
+        let set_index = set_index.unwrap_or(self.current_set);
+        let leg_index = leg_index.unwrap_or(self.current_leg);
+
+        Some(self.players.get(player_index)?
+            .sets.get(set_index)?
+            .legs.get(leg_index)?
+            .leg_average)
+    }
+
+    pub fn get_set_average(&self, player_index: Option<usize>, set_index: Option<usize>) -> Option<f32> {
+        let player_index = player_index.unwrap_or(self.current_player);
+        let set_index = set_index.unwrap_or(self.current_set);
+
+        Some(self.players.get(player_index)?
+            .sets.get(set_index)?
+            .get_set_average())
+    }
+
+    pub fn get_average(&self, player_index: Option<usize>) -> Option<f32> {
+        let player_index = player_index.unwrap_or(self.current_player);
+
+        Some(self.players.get(player_index)?
+            .get_average())
     }
 }
