@@ -1,5 +1,4 @@
 use yew::prelude::*;
-use crate::models::game::leg;
 use crate::utils::translate_multiplier_to_char;
 use crate::checkout::recommend_throws;
 use crate::models::{GameState, Throw};
@@ -24,14 +23,21 @@ pub fn score_card(props: &ScoreCardProps) -> Html {
     let score = game_state.get_leg_score(Some(props.player_index), None, None).unwrap_or(0);
     let is_bust = game_state.is_leg_bust(Some(props.player_index), None, None).unwrap_or(false);
 
-    let recommended_throws: [Option<Throw>; 3] = [None, None, None]; // TODO implement
+    let latest_visit = game_state.get_latest_visit(Some(props.player_index), None, None);
+
+    let visit_recommendation = if is_bust {
+        latest_visit.map(|v| v.throws).unwrap_or_default()
+    } else {
+        recommend_throws(score, latest_visit)
+    };
+
 
     let leg_average = game_state.get_leg_average(Some(props.player_index), None, None).unwrap_or(0.0);
     let set_average = game_state.get_set_average(Some(props.player_index), None).unwrap_or(0.0);
     let average = game_state.get_average(Some(props.player_index)).unwrap_or(0.0);
 
 
-    let started = true; // TODO implement
+    let started = game_state.has_player_started_leg(Some(props.player_index), None, None).unwrap_or(false);
 
     let last_visit_score = game_state.get_last_visit_score(Some(props.player_index), None, None).unwrap_or(0); // TODO implement
     let darts_thrown = game_state.get_darts_thrown(Some(props.player_index), None, None).unwrap_or(0); // TODO implement
@@ -77,7 +83,7 @@ pub fn score_card(props: &ScoreCardProps) -> Html {
         <tbody>
             <tr>
             <td class={format!("w-1/3 h-8 border-r border-brand-bg border-t-brand-text border-t-4 border-b-4 text-center {}",
-                if let Some(throw) = recommended_throws[0] {
+                if let Some(throw) = visit_recommendation[0] {
                     if throw.multiplier == 2 {
                         "border-b-brand-secondary"
                 } else if throw.multiplier == 3 {
@@ -91,7 +97,7 @@ pub fn score_card(props: &ScoreCardProps) -> Html {
             )}>
             <span class="text-sm font-bold text-brand-bg">
                 {
-                    if let Some(throw) = recommended_throws[0] {
+                    if let Some(throw) = visit_recommendation[0] {
                         format!("{}{}",
                             translate_multiplier_to_char(throw.multiplier),
                             throw.field
@@ -103,7 +109,7 @@ pub fn score_card(props: &ScoreCardProps) -> Html {
             </span>
             </td>
             <td class={format!("w-1/3 h-8 border-x border-brand-bg border-t-brand-text border-t-4 border-b-4 text-center {}",
-                if let Some(throw) = recommended_throws[1] {
+                if let Some(throw) = visit_recommendation[1] {
                     if throw.multiplier == 2 {
                         "border-b-brand-secondary"
                     } else if throw.multiplier == 3 {
@@ -117,7 +123,7 @@ pub fn score_card(props: &ScoreCardProps) -> Html {
             )}>
             <span class="text-sm font-bold text-brand-bg">
                 {
-                    if let Some(throw) = recommended_throws[1] {
+                    if let Some(throw) = visit_recommendation[1] {
                         format!("{}{}",
                             translate_multiplier_to_char(throw.multiplier),
                             throw.field
@@ -129,7 +135,7 @@ pub fn score_card(props: &ScoreCardProps) -> Html {
             </span>
             </td>
             <td class={format!("w-1/3 h-8 border-l border-brand-bg border-t-brand-text border-t-4 border-b-4 text-center {}",
-                if let Some(throw) = recommended_throws[2] {
+                if let Some(throw) = visit_recommendation[2] {
                     if throw.multiplier == 2 {
                         "border-b-brand-secondary"
                     } else if throw.multiplier == 3 {
@@ -143,7 +149,7 @@ pub fn score_card(props: &ScoreCardProps) -> Html {
             )}>
             <span class="text-sm font-bold text-brand-bg">
                 {
-                    if let Some(throw) = recommended_throws[2] {
+                    if let Some(throw) = visit_recommendation[2] {
                         format!("{}{}",
                             translate_multiplier_to_char(throw.multiplier),
                             throw.field

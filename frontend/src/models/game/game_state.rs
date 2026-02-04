@@ -1,4 +1,4 @@
-use crate::models::{Throw, GamePlayer};
+use crate::models::{Throw, GamePlayer, Visit};
 use crate::{log_info, log_error};
 use yew::prelude::*;
 use std::rc::Rc;
@@ -11,6 +11,7 @@ pub enum GameAction {
 #[derive(Clone, PartialEq)]
 pub struct GameState {
     pub players: Vec<GamePlayer>,
+    pub starting_player: usize,
     pub current_player: usize,
     pub current_set: usize,
     pub current_leg: usize,
@@ -23,6 +24,7 @@ impl Default for GameState {
     fn default() -> Self {
         Self {
             players: [GamePlayer::default(), GamePlayer::default()].to_vec(),
+            starting_player: 0,
             current_player: 0,
             current_set: 0,
             current_leg: 0,
@@ -184,5 +186,31 @@ impl GameState {
 
         Some(self.players.get(player_index)?
             .get_average())
+    }
+    pub fn has_player_started_leg(&self, player_index: Option<usize>, set_index: Option<usize>, leg_index: Option<usize>) -> Option<bool> {
+        let player_index = player_index.unwrap_or(self.current_player);
+        let set_index = set_index.unwrap_or(self.current_set);
+        let leg_index = leg_index.unwrap_or(self.current_leg);
+
+        let mut started = player_index == self.starting_player;
+        if set_index % self.players.len() != player_index {
+            started = !started;
+        }
+        if leg_index % self.players.len() != player_index {
+            started = !started;
+        }
+        Some(started)
+    }
+
+    pub fn get_latest_visit(&self, player_index: Option<usize>, set_index: Option<usize>, leg_index: Option<usize>) -> Option<Visit> {
+        let player_index = player_index.unwrap_or(self.current_player);
+        let set_index = set_index.unwrap_or(self.current_set);
+        let leg_index = leg_index.unwrap_or(self.current_leg);
+
+        self.players.get(player_index)?
+            .sets.get(set_index)?
+            .legs.get(leg_index)?
+            .visits.last()
+            .cloned()
     }
 }
