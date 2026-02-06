@@ -9,6 +9,7 @@ pub struct Leg {
     pub is_bust: bool,
     pub leg_average: f32,
     pub darts_thrown: i32,
+    pub is_won: bool,
 }
 
 impl Default for Leg {
@@ -22,6 +23,7 @@ impl Default for Leg {
             is_bust: false,
             leg_average: 0.0,
             darts_thrown: 0,
+            is_won: false,
         }
     }
 }
@@ -65,11 +67,18 @@ impl Leg {
         self.leg_average = average;
     }
 
+    pub fn check_win(&mut self) {
+        if self.score == 0 {
+            self.is_won = true;
+        }
+    }
+
     pub fn change_throw(&mut self, visit_index: usize, throw_index: usize, throw: Throw) -> Result<(), &'static str>{
         self.get_visit_mut(visit_index)?.change_throw(throw_index, throw)?;
         self.calculate_score();
         self.calculate_darts_thrown();
         self.calculate_leg_average();
+        self.check_win();
         Ok(())
     }
 

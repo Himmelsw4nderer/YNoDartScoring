@@ -1,7 +1,7 @@
 use yew::prelude::*;
 use crate::utils::translate_multiplier_to_char;
 use crate::checkout::recommend_throws;
-use crate::models::{GameState, Throw};
+use crate::models::{GameState};
 use crate::log_error;
 
 

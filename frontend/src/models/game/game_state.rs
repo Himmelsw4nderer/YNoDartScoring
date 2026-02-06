@@ -56,9 +56,7 @@ impl Reducible for GameState {
 
                 let result = (|| -> Result<(), &'static str> {
                     let player = new_state.players.get_mut(player_index).ok_or("Player index out of bounds")?;
-                    let set = player.sets.get_mut(set_index).ok_or("Set index out of bounds")?;
-                    let leg = set.legs.get_mut(leg_index).ok_or("Leg index out of bounds")?;
-                    leg.change_throw(visit_index, throw_index, throw)
+                    player.change_throw(set_index, leg_index, visit_index, throw_index, throw)
                 })();
 
                 match result {
@@ -178,14 +176,14 @@ impl GameState {
 
         Some(self.players.get(player_index)?
             .sets.get(set_index)?
-            .get_set_average())
+            .set_average)
     }
 
     pub fn get_average(&self, player_index: Option<usize>) -> Option<f32> {
         let player_index = player_index.unwrap_or(self.current_player);
 
         Some(self.players.get(player_index)?
-            .get_average())
+            .average)
     }
     pub fn has_player_started_leg(&self, player_index: Option<usize>, set_index: Option<usize>, leg_index: Option<usize>) -> Option<bool> {
         let player_index = player_index.unwrap_or(self.current_player);
