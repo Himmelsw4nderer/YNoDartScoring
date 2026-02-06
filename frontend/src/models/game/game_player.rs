@@ -6,6 +6,8 @@ pub struct GamePlayer {
     pub name: String,
     pub sets: Vec<Set>,
     pub average: f32,
+    pub is_won: bool,
+    pub first_to_sets: i32,
 }
 
 impl Default for GamePlayer {
@@ -14,12 +16,14 @@ impl Default for GamePlayer {
             name: String::from("Placeholder"),
             sets: [Set::default()].to_vec(),
             average: 0.0,
+            is_won: false,
+            first_to_sets: 1,
         }
     }
 }
 
 impl GamePlayer {
-    pub fn calculate_average(&mut self){
+    fn calculate_average(&mut self){
         let mut total_score = 0.0;
         let mut total_throws = 0;
         for set in self.sets.iter() {
@@ -38,6 +42,19 @@ impl GamePlayer {
         self.average = average;
     }
 
+    fn check_win(&mut self){
+        let mut sets_won = 0;
+        for set in self.sets.iter() {
+            if set.is_won{
+                sets_won += 1;
+            }
+        }
+        if sets_won >= self.first_to_sets{
+            self.is_won = true;
+        }
+    }
+
+
     pub fn change_throw(&mut self, set_index: usize, leg_index: usize, visit_index: usize, throw_index: usize, throw: Throw) -> Result<(), &'static str>{
         if set_index >= self.sets.len() {
             return Err("Leg index out of bounds");
@@ -46,6 +63,7 @@ impl GamePlayer {
         let result = self.sets[set_index].change_throw(leg_index, visit_index, throw_index, throw);
         if result.is_ok() {
             self.calculate_average();
+            self.check_win();
         }
         result
     }
