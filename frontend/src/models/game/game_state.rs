@@ -75,11 +75,22 @@ impl Reducible for GameState {
 
             GameAction::NextPlayer => {
                 let mut new_state = (*self).clone();
+                let mut is_leg_won = false;
+                let mut is_set_won = false;
+
                 let result = (|| -> Result<(), &'static str> {
                     let player = new_state.players.get_mut(new_state.current_player).ok_or("Player index out of bounds")?;
                     let set = player.sets.get_mut(new_state.current_set).ok_or("Set index out of bounds")?;
                     let leg = set.legs.get_mut(new_state.current_leg).ok_or("Leg index out of bounds")?;
                     leg.add_visit();
+
+                    if leg.is_won {
+                        is_leg_won = true;
+                    }
+
+                    if set.is_won {
+                        is_set_won = true;
+                    }
                     Ok(())
                 })();
 
@@ -87,10 +98,16 @@ impl Reducible for GameState {
                     log_error!("Failed to get score for player: {}", error_msg);
                 }
 
+                if is_set_won {
+                    new_state.new_set();
+                } else if is_leg_won {
+                    new_state.new_leg();
+                }
+
                 new_state.current_player = (new_state.current_player + 1) % new_state.players.len();
                 new_state.current_throw = 0;
 
-                if new_state.current_player == 0 {
+                if !is_set_won && !is_leg_won && new_state.current_player == 0 {
                     new_state.current_visit += 1;
                 }
                 log_info!("Next player: {} -> {}", self.current_player, new_state.current_player);
@@ -226,5 +243,42 @@ impl GameState {
 
         Some(self.players.get(player_index)?
             .sets_won)
+    }
+
+    fn new_leg(&mut self) {
+        self.current_leg += 1;
+        self.current_visit = 0;
+        self.current_throw = 0;
+
+        let player_starts: Vec<bool> = (0..self.players.len())
+            .map(|i| self.has_player_started_leg(Some(i), None, None).unwrap_or(false))
+            .collect();
+
+        for (player_index, player) in self.players.iter_mut().enumerate() {
+            if let Some(set) = player.sets.get_mut(self.current_set) {
+                set.legs.push(crate::models::Leg::default());
+            }
+            if player_starts[player_index] {
+                self.current_player = player_index;
+            }
+        }
+    }
+
+    fn new_set(&mut self) {
+        self.current_set += 1;
+        self.current_leg = 0;
+        self.current_visit = 0;
+        self.current_throw = 0;
+
+        let player_starts: Vec<bool> = (0..self.players.len())
+            .map(|i| self.has_player_started_leg(Some(i), None, None).unwrap_or(false))
+            .collect();
+
+        for (player_index, player) in self.players.iter_mut().enumerate() {
+            player.sets.push(crate::models::Set::default());
+            if player_starts[player_index] {
+                self.current_player = player_index;
+            }
+        }
     }
 }
