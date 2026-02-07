@@ -1,7 +1,7 @@
 use yew::prelude::*;
 use crate::utils::translate_multiplier_to_char;
 use crate::checkout::recommend_throws;
-use crate::models::{LegState, ThrowState};
+use crate::models::{GameState};
 use crate::log_error;
 
 
@@ -12,40 +12,37 @@ pub struct ScoreCardProps {
 
 #[function_component(ScoreCard)]
 pub fn score_card(props: &ScoreCardProps) -> Html {
-    let Some(throw_state) = use_context::<UseReducerHandle<ThrowState>>() else {
-        log_error!("ThrowState context not found - cannot render ScoreCard");
-        return html! { <div>{"Error: Context not available"}</div> };
-    };
 
-    let Some(leg_state) = use_context::<UseReducerHandle<LegState>>() else {
+    let Some(game_state) = use_context::<UseReducerHandle<GameState>>() else {
         log_error!("LegState context not found - cannot render ScoreCard");
         return html! { <div>{"Error: Context not available"}</div> };
     };
-    let player = &leg_state.player_states[props.player_index];
-    let is_turn = leg_state.current_player == props.player_index;
-    let mut is_bust = false;
+    let player = &game_state.players[props.player_index];
+    let is_turn = game_state.current_player == props.player_index;
 
-    let mut score = player.score;
+    let score = game_state.get_leg_score(Some(props.player_index), None, None).unwrap_or(0);
+    let is_bust = game_state.is_leg_bust(Some(props.player_index), None, None).unwrap_or(false);
 
-    if let Some(throw_score) = throw_state.get_clean_score(score) {
-        score -= throw_score;
+    let latest_visit = game_state.get_latest_visit(Some(props.player_index), None, None);
+
+    let visit_recommendation = if is_bust {
+        latest_visit.map(|v| v.throws).unwrap_or_default()
     } else {
-        is_bust = true;
-    }
-
-    if !is_turn{
-        score = player.score;
-    }
-
-    let current_throw_if_turn = if is_turn { Some((*throw_state).clone()) } else { None };
-    let recommended_throws = if is_bust { throw_state.current_throws.clone() } else { recommend_throws(score, current_throw_if_turn.clone()) };
-    let average = player.calculate_average(&current_throw_if_turn);
+        recommend_throws(score, latest_visit)
+    };
 
 
-    let started = leg_state.starting_player == props.player_index;
+    let leg_average = game_state.get_leg_average(Some(props.player_index), None, None).unwrap_or(0.0);
+    let set_average = game_state.get_set_average(Some(props.player_index), None).unwrap_or(0.0);
+    let average = game_state.get_average(Some(props.player_index)).unwrap_or(0.0);
 
-    let last_throw = player.throw_states.last().map(|ts| ts.get_score()).unwrap_or(0);
-    let darts_thrown = player.throw_states.len() as i32 * 3 + throw_state.get_throw_amount();
+    let legs_won = game_state.get_legs_won(Some(props.player_index), None).unwrap_or(0);
+    let sets_won = game_state.get_sets_won(Some(props.player_index)).unwrap_or(0);
+
+    let started = game_state.has_player_started_leg(Some(props.player_index), None, None).unwrap_or(false);
+
+    let last_visit_score = game_state.get_last_visit_score(Some(props.player_index), None, None).unwrap_or(0);
+    let darts_thrown = game_state.get_darts_thrown(Some(props.player_index), None, None).unwrap_or(0);
 
     html! {
         <div class={format!("border-y-4 p-3 w-1/2 {}",
@@ -72,12 +69,12 @@ pub fn score_card(props: &ScoreCardProps) -> Html {
         <tbody>
             <tr>
                 <td class="h-6 bg-brand-bg text-brand-text text-center font-bold border-brand-text">
-                    {0}
+                    {legs_won}
                 </td>
             </tr>
             <tr>
                 <td class="h-6 bg-brand-bg text-brand-text text-center border-t border-brand-text">
-                    {0}
+                    {sets_won}
                 </td>
             </tr>
         </tbody>
@@ -88,7 +85,7 @@ pub fn score_card(props: &ScoreCardProps) -> Html {
         <tbody>
             <tr>
             <td class={format!("w-1/3 h-8 border-r border-brand-bg border-t-brand-text border-t-4 border-b-4 text-center {}",
-                if let Some(throw) = recommended_throws[0] {
+                if let Some(throw) = visit_recommendation[0] {
                     if throw.multiplier == 2 {
                         "border-b-brand-secondary"
                 } else if throw.multiplier == 3 {
@@ -102,7 +99,7 @@ pub fn score_card(props: &ScoreCardProps) -> Html {
             )}>
             <span class="text-sm font-bold text-brand-bg">
                 {
-                    if let Some(throw) = recommended_throws[0] {
+                    if let Some(throw) = visit_recommendation[0] {
                         format!("{}{}",
                             translate_multiplier_to_char(throw.multiplier),
                             throw.field
@@ -114,7 +111,7 @@ pub fn score_card(props: &ScoreCardProps) -> Html {
             </span>
             </td>
             <td class={format!("w-1/3 h-8 border-x border-brand-bg border-t-brand-text border-t-4 border-b-4 text-center {}",
-                if let Some(throw) = recommended_throws[1] {
+                if let Some(throw) = visit_recommendation[1] {
                     if throw.multiplier == 2 {
                         "border-b-brand-secondary"
                     } else if throw.multiplier == 3 {
@@ -128,7 +125,7 @@ pub fn score_card(props: &ScoreCardProps) -> Html {
             )}>
             <span class="text-sm font-bold text-brand-bg">
                 {
-                    if let Some(throw) = recommended_throws[1] {
+                    if let Some(throw) = visit_recommendation[1] {
                         format!("{}{}",
                             translate_multiplier_to_char(throw.multiplier),
                             throw.field
@@ -140,7 +137,7 @@ pub fn score_card(props: &ScoreCardProps) -> Html {
             </span>
             </td>
             <td class={format!("w-1/3 h-8 border-l border-brand-bg border-t-brand-text border-t-4 border-b-4 text-center {}",
-                if let Some(throw) = recommended_throws[2] {
+                if let Some(throw) = visit_recommendation[2] {
                     if throw.multiplier == 2 {
                         "border-b-brand-secondary"
                     } else if throw.multiplier == 3 {
@@ -154,7 +151,7 @@ pub fn score_card(props: &ScoreCardProps) -> Html {
             )}>
             <span class="text-sm font-bold text-brand-bg">
                 {
-                    if let Some(throw) = recommended_throws[2] {
+                    if let Some(throw) = visit_recommendation[2] {
                         format!("{}{}",
                             translate_multiplier_to_char(throw.multiplier),
                             throw.field
@@ -171,12 +168,20 @@ pub fn score_card(props: &ScoreCardProps) -> Html {
         <div class="h-1"></div>
             <table class="text-brand-text text-sm w-full">
                 <tr>
+                    <td>{"3 Dart-Avg. (Leg)"}</td>
+                    <td>{format!("{:.2}", leg_average)}</td>
+                </tr>
+                <tr>
+                    <td>{"3 Dart-Avg. (Set)"}</td>
+                    <td>{format!("{:.2}", set_average)}</td>
+                </tr>
+                <tr>
                     <td>{"3 Dart-Avg."}</td>
                     <td>{format!("{:.2}", average)}</td>
                 </tr>
                 <tr>
                     <td>{"Last Throw"}</td>
-                    <td>{last_throw}</td>
+                    <td>{last_visit_score}</td>
                 </tr>
                 <tr>
                     <td>{"Thrown Darts"}</td>

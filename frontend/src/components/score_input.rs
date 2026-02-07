@@ -1,24 +1,17 @@
 use yew::prelude::*;
-use crate::models::{Throw, ThrowState, ThrowAction, LegAction, LegState};
+use crate::models::{GameState, Throw, GameAction};
 use crate::utils::translate_multiplier_to_char;
 use crate::{log_error};
 
 #[function_component(ScoreInput)]
 pub fn score_input() -> Html {
-    let Some(throw_state) = use_context::<UseReducerHandle<ThrowState>>() else {
-        log_error!("ThrowState context not found - cannot render ScoreInput");
-        return html! { <div>{"Error: Context not available"}</div> };
-    };
-
-    let Some(leg_state) = use_context::<UseReducerHandle<LegState>>() else {
+    let Some(game_state) = use_context::<UseReducerHandle<GameState>>() else {
         log_error!("LegState context not found - cannot render ScoreInput");
         return html! { <div>{"Error: Context not available"}</div> };
     };
 
     let active_multiplier = use_state(|| 1);
     let edit_throw_index = use_state(|| None::<usize>);
-    let current_throw_index = use_state(|| 0);
-
 
     #[derive(Clone, PartialEq)]
     enum Button {
@@ -35,28 +28,21 @@ pub fn score_input() -> Html {
 
     let handle_number = {
         let active_multiplier = active_multiplier.clone();
-        let throw_state = throw_state.clone();
-        let current_throw_index = current_throw_index.clone();
         let edit_throw_index = edit_throw_index.clone();
+        let game_state = game_state.clone();
+
 
         move |n: i32| {
-            let index = edit_throw_index.as_ref().copied().unwrap_or(*current_throw_index);
-
-            if index >= 3 {
-                active_multiplier.set(1);
-                return;
-            }
+            let game_state = game_state.clone();
 
             let throw = Throw {
                 field: n,
                 multiplier: *active_multiplier,
             };
 
-            throw_state.dispatch(ThrowAction::AddThrow(index, throw));
+            game_state.dispatch(GameAction::ChangeThrow(throw, None, None, None, None, edit_throw_index.as_ref().map(|i| *i)));
 
-            if edit_throw_index.is_none() {
-                current_throw_index.set(index + 1);
-            } else {
+            if ! edit_throw_index.is_none() {
                 edit_throw_index.set(None);
             }
 
@@ -65,17 +51,18 @@ pub fn score_input() -> Html {
     };
 
     let on_throw_click = {
-        let throw_state = throw_state.clone();
         let edit_throw_index = edit_throw_index.clone();
-        move |index: usize| {
-            let throws = throw_state.current_throws;
+        let game_state = game_state.clone();
+
+        move |throw_index: usize| {
             let edit_throw_index = edit_throw_index.clone();
+            let game_state = game_state.clone();
 
             Callback::from(move |_| {
-                if throws[index].is_none() {
+                if game_state.get_throw(None, None, None, None, Some(throw_index)).is_none() {
                     return;
                 }
-                edit_throw_index.set(Some(index));
+                edit_throw_index.set(Some(throw_index));
             })
         }
     };
@@ -92,20 +79,11 @@ pub fn score_input() -> Html {
     };
 
     let on_submit_throw = {
-        let throw_state = throw_state.clone();
-        let leg_state = leg_state.clone();
-        let current_throw_index = current_throw_index.clone();
         let edit_throw_index = edit_throw_index.clone();
+        let game_state = game_state.clone();
 
         Callback::from(move |_| {
-            leg_state.dispatch(LegAction::ChangeThrow(
-                leg_state.current_player,
-                None,
-                (*throw_state).clone()
-            ));
-            leg_state.dispatch(LegAction::NextPlayer);
-            throw_state.dispatch(ThrowAction::Clear);
-            current_throw_index.set(0);
+            game_state.dispatch(GameAction::NextPlayer);
             edit_throw_index.set(None);
         })
     };
@@ -116,7 +94,7 @@ pub fn score_input() -> Html {
         <tbody>
             <tr>
             <td class={format!("w-1/4 h-16 border-r border-brand-bg border-t-brand-text border-t-4 border-b-4 text-center cursor-pointer {}",
-                if let Some(throw) = throw_state.current_throws[0].as_ref() {
+                if let Some(throw) = game_state.get_throw(None, None, None, None, Some(0)).as_ref() {
                     if throw.multiplier == 2 {
                         "border-b-brand-secondary"
                 } else if throw.multiplier == 3 {
@@ -131,7 +109,7 @@ pub fn score_input() -> Html {
             onclick={on_throw_click(0)}>
             <span class={format!("text-3xl font-bold text-brand-bg {}", if *edit_throw_index == Some(0) { "underline" } else { "" })}>
                 {
-                    if let Some(throw) = throw_state.current_throws[0].as_ref() {
+                    if let Some(throw) = game_state.get_throw(None, None, None, None, Some(0)).as_ref() {
                         format!("{}",
                             throw.get_score()
                         )
@@ -142,7 +120,7 @@ pub fn score_input() -> Html {
             </span>
             <span class="text-base opacity-60 text-brand-bg">
                 {
-                    if let Some(throw) = throw_state.current_throws[0].as_ref() {
+                    if let Some(throw) = game_state.get_throw(None, None, None, None, Some(0)).as_ref() {
                         format!(" {}{}",
                             translate_multiplier_to_char(throw.multiplier),
                             throw.field
@@ -154,7 +132,7 @@ pub fn score_input() -> Html {
             </span>
             </td>
             <td class={format!("w-1/4 h-16 border-x border-brand-bg border-t-brand-text border-t-4 border-b-4 text-center cursor-pointer {}",
-                if let Some(throw) = throw_state.current_throws[1].as_ref() {
+                if let Some(throw) = game_state.get_throw(None, None, None, None, Some(1)).as_ref() {
                     if throw.multiplier == 2 {
                         "border-b-brand-secondary"
                     } else if throw.multiplier == 3 {
@@ -169,7 +147,7 @@ pub fn score_input() -> Html {
             onclick={on_throw_click(1)}>
             <span class={format!("text-3xl font-bold text-brand-bg {}", if *edit_throw_index == Some(1) { "underline" } else { "" })}>
                 {
-                    if let Some(throw) = throw_state.current_throws[1].as_ref() {
+                    if let Some(throw) = game_state.get_throw(None, None, None, None, Some(1)).as_ref() {
                         format!("{}",
                             throw.get_score()
                         )
@@ -180,7 +158,7 @@ pub fn score_input() -> Html {
             </span>
             <span class="text-base opacity-60 text-brand-bg">
                 {
-                    if let Some(throw) = throw_state.current_throws[1].as_ref() {
+                    if let Some(throw) = game_state.get_throw(None, None, None, None, Some(1)).as_ref() {
                         format!(" {}{}",
                             translate_multiplier_to_char(throw.multiplier),
                             throw.field
@@ -192,7 +170,7 @@ pub fn score_input() -> Html {
             </span>
             </td>
             <td class={format!("w-1/4 h-16 border-x border-brand-bg border-t-brand-text border-t-4 border-b-4 text-center cursor-pointer {}",
-                if let Some(throw) = throw_state.current_throws[2].as_ref() {
+                if let Some(throw) = game_state.get_throw(None, None, None, None, Some(2)).as_ref() {
                     if throw.multiplier == 2 {
                         "border-b-brand-secondary"
                     } else if throw.multiplier == 3 {
@@ -207,7 +185,7 @@ pub fn score_input() -> Html {
             onclick={on_throw_click(2)}>
             <span class={format!("text-3xl font-bold text-brand-bg {}", if *edit_throw_index == Some(2) { "underline" } else { "" })}>
                 {
-                    if let Some(throw) = throw_state.current_throws[2].as_ref() {
+                    if let Some(throw) = game_state.get_throw(None, None, None, None, Some(2)).as_ref() {
                         format!("{}",
                             throw.get_score()
                         )
@@ -218,7 +196,7 @@ pub fn score_input() -> Html {
             </span>
             <span class="text-base opacity-60 text-brand-bg">
                 {
-                    if let Some(throw) = throw_state.current_throws[2].as_ref() {
+                    if let Some(throw) = game_state.get_throw(None, None, None, None, Some(2)).as_ref() {
                         format!(" {}{}",
                             translate_multiplier_to_char(throw.multiplier),
                             throw.field

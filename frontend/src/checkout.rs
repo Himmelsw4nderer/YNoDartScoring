@@ -1,4 +1,4 @@
-use crate::models::{Throw, ThrowState};
+use crate::models::{Throw, Visit};
 use crate::log_debug;
 
 
@@ -242,7 +242,7 @@ fn recommend_throws_no_checkout(mut score: i32, amount_of_throws: Option<i32>) -
     }
     return throws;
 }
-fn fill_throws_with_recommendations(throw_state: &ThrowState, recommended_throws: &[Option<Throw>; 3]) -> [Option<Throw>; 3] {
+fn fill_throws_with_recommendations(visit: &Visit, recommended_throws: &[Option<Throw>; 3]) -> [Option<Throw>; 3] {
     let mut filled_throws: [Option<Throw>; 3] = [None, None, None];
     let mut recommendation_index = 0;
     let mut filled_index = 0;
@@ -252,7 +252,7 @@ fn fill_throws_with_recommendations(throw_state: &ThrowState, recommended_throws
             break;
         }
 
-        if let Some(throw) = throw_state.current_throws[index] {
+        if let Some(throw) = visit.throws[index] {
             filled_throws[filled_index] = Some(throw);
             filled_index += 1;
         } else if let Some(throw) = recommended_throws[recommendation_index] {
@@ -267,13 +267,13 @@ fn fill_throws_with_recommendations(throw_state: &ThrowState, recommended_throws
     filled_throws
 }
 
-pub fn recommend_throws(score: i32, throw_state : Option<ThrowState>) -> [Option<Throw>; 3] {
+pub fn recommend_throws(score: i32, visit : Option<Visit>) -> [Option<Throw>; 3] {
     log_debug!("Recommending throws for score: {}", score);
 
     let mut recommended_throws = [None, None, None];
     let mut amount_of_throws = 3;
-    if let Some(ref throw_state) = throw_state {
-        amount_of_throws = 3 - throw_state.get_throw_amount();
+    if let Some(ref visit) = visit {
+        amount_of_throws = 3 - visit.get_darts_thrown();
     }
 
     if score > 170 {
@@ -285,8 +285,8 @@ pub fn recommend_throws(score: i32, throw_state : Option<ThrowState>) -> [Option
         };
     }
 
-    if let Some(throw_state) = throw_state {
-        recommended_throws = fill_throws_with_recommendations(&throw_state, &recommended_throws)
+    if let Some(visit) = visit {
+        recommended_throws = fill_throws_with_recommendations(&visit, &recommended_throws)
     }
 
     log_debug!("Recommended throws for score {}: {:?}", score, recommended_throws);
