@@ -6,6 +6,7 @@ pub struct Set {
     pub legs: Vec<Leg>,
     pub is_won: bool,
     pub set_average: f32,
+    pub legs_won: i32,
     pub first_to_legs: i32,
 }
 
@@ -15,6 +16,7 @@ impl Default for Set {
             legs: [Leg::default()].to_vec(),
             is_won: false,
             set_average: 0.0,
+            legs_won: 0,
             first_to_legs: 3,
         }
     }
@@ -45,6 +47,7 @@ impl Set {
                 legs_won += 1;
             }
         }
+        self.legs_won = legs_won;
         if legs_won >= self.first_to_legs{
             self.is_won = true;
         }

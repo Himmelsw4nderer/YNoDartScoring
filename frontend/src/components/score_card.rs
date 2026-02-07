@@ -36,11 +36,13 @@ pub fn score_card(props: &ScoreCardProps) -> Html {
     let set_average = game_state.get_set_average(Some(props.player_index), None).unwrap_or(0.0);
     let average = game_state.get_average(Some(props.player_index)).unwrap_or(0.0);
 
+    let legs_won = game_state.get_legs_won(Some(props.player_index), None).unwrap_or(0);
+    let sets_won = game_state.get_sets_won(Some(props.player_index)).unwrap_or(0);
 
     let started = game_state.has_player_started_leg(Some(props.player_index), None, None).unwrap_or(false);
 
-    let last_visit_score = game_state.get_last_visit_score(Some(props.player_index), None, None).unwrap_or(0); // TODO implement
-    let darts_thrown = game_state.get_darts_thrown(Some(props.player_index), None, None).unwrap_or(0); // TODO implement
+    let last_visit_score = game_state.get_last_visit_score(Some(props.player_index), None, None).unwrap_or(0);
+    let darts_thrown = game_state.get_darts_thrown(Some(props.player_index), None, None).unwrap_or(0);
 
     html! {
         <div class={format!("border-y-4 p-3 w-1/2 {}",
@@ -67,12 +69,12 @@ pub fn score_card(props: &ScoreCardProps) -> Html {
         <tbody>
             <tr>
                 <td class="h-6 bg-brand-bg text-brand-text text-center font-bold border-brand-text">
-                    {0}
+                    {legs_won}
                 </td>
             </tr>
             <tr>
                 <td class="h-6 bg-brand-bg text-brand-text text-center border-t border-brand-text">
-                    {0}
+                    {sets_won}
                 </td>
             </tr>
         </tbody>

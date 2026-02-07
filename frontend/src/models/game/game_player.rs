@@ -7,6 +7,7 @@ pub struct GamePlayer {
     pub sets: Vec<Set>,
     pub average: f32,
     pub is_won: bool,
+    pub sets_won: i32,
     pub first_to_sets: i32,
 }
 
@@ -17,6 +18,7 @@ impl Default for GamePlayer {
             sets: [Set::default()].to_vec(),
             average: 0.0,
             is_won: false,
+            sets_won: 0,
             first_to_sets: 1,
         }
     }
@@ -49,6 +51,7 @@ impl GamePlayer {
                 sets_won += 1;
             }
         }
+        self.sets_won = sets_won;
         if sets_won >= self.first_to_sets{
             self.is_won = true;
         }

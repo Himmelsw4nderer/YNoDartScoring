@@ -211,4 +211,20 @@ impl GameState {
             .visits.last()
             .cloned()
     }
+
+    pub fn get_legs_won(&self, player_index: Option<usize>, set_index: Option<usize>) -> Option<i32> {
+        let player_index = player_index.unwrap_or(self.current_player);
+        let set_index = set_index.unwrap_or(self.current_set);
+
+        Some(self.players.get(player_index)?
+            .sets.get(set_index)?
+            .legs_won)
+    }
+
+    pub fn get_sets_won(&self, player_index: Option<usize>) -> Option<i32> {
+        let player_index = player_index.unwrap_or(self.current_player);
+
+        Some(self.players.get(player_index)?
+            .sets_won)
+    }
 }
