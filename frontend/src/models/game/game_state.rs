@@ -82,35 +82,45 @@ impl Reducible for GameState {
                     let player = new_state.players.get_mut(new_state.current_player).ok_or("Player index out of bounds")?;
                     let set = player.sets.get_mut(new_state.current_set).ok_or("Set index out of bounds")?;
                     let leg = set.legs.get_mut(new_state.current_leg).ok_or("Leg index out of bounds")?;
-                    leg.add_visit();
 
-                    if leg.is_won {
+                    if player.is_won {
+                        new_state.winner = Some(new_state.current_player);
+                    } else if leg.is_won {
                         is_leg_won = true;
-                    }
-
-                    if set.is_won {
+                    } else if set.is_won {
                         is_set_won = true;
                     }
                     Ok(())
                 })();
 
                 if let Err(error_msg) = result {
-                    log_error!("Failed to get score for player: {}", error_msg);
+                    log_error!("Failed to get for player: {}", error_msg);
                 }
 
+                if new_state.winner.is_some() {
+                    log_info!("Player won game: {}", self.current_player);
+                    return std::rc::Rc::new(new_state);
+                }
                 if is_set_won {
+                    log_info!("Player finised Set: {}", self.current_player);
                     new_state.new_set();
                 } else if is_leg_won {
+                    log_info!("Player finised leg: {}", self.current_player);
                     new_state.new_leg();
+                } else {
+                    let old_player = new_state.current_player;
+                    new_state.current_player = (new_state.current_player + 1) % new_state.players.len();
+                    new_state.current_throw = 0;
+
+                    if new_state.current_player == 0 {
+                        new_state.new_visit();
+                    }
+
+                    log_info!("Next player: {} -> {}", old_player, new_state.current_player);
                 }
 
-                new_state.current_player = (new_state.current_player + 1) % new_state.players.len();
-                new_state.current_throw = 0;
 
-                if !is_set_won && !is_leg_won && new_state.current_player == 0 {
-                    new_state.current_visit += 1;
-                }
-                log_info!("Next player: {} -> {}", self.current_player, new_state.current_player);
+
                 std::rc::Rc::new(new_state)
             }
         }
@@ -243,6 +253,19 @@ impl GameState {
 
         Some(self.players.get(player_index)?
             .sets_won)
+    }
+
+    fn new_visit(&mut self) {
+        self.current_visit += 1;
+        self.current_throw = 0;
+
+        for player in self.players.iter_mut() {
+            if let Some(set) = player.sets.get_mut(self.current_set) {
+                if let Some(leg) = set.legs.get_mut(self.current_leg) {
+                    leg.add_visit();
+                }
+            }
+        }
     }
 
     fn new_leg(&mut self) {
