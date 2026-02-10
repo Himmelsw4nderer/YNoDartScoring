@@ -1,6 +1,7 @@
-mod score_input;
-mod score_card;
-mod score_board;
+pub mod game;
+pub mod setup;
 
-pub use score_input::ScoreInput;
-pub use score_board::ScoreBoard;
+pub use game::score_input::ScoreInput;
+pub use game::score_board::ScoreBoard;
+pub use setup::player_setup::PlayerSetup;
+pub use setup::starting_score_selector::StartingScoreSelector;
