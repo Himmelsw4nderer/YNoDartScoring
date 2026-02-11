@@ -7,6 +7,7 @@ pub mod game {
     pub mod visit;
 }
 mod route_state;
+mod setup_state;
 
 pub use game::game_state::GameState;
 pub use game::game_state::GameAction;
@@ -16,3 +17,4 @@ pub use route_state::{Route, RouteState, RouteAction};
 pub use game::set::Set;
 pub use game::throw::Throw;
 pub use game::visit::Visit;
+pub use setup_state::{SetupState, SetupAction};
