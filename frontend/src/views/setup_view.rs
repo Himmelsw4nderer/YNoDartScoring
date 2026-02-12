@@ -7,6 +7,7 @@ use crate::models::Route;
 pub fn setup_view() -> Html {
     let navigator = use_navigator();
 
+
     html! {
         <div class="flex-1 flex flex-col items-center justify-start p-4 w-full max-w-lg mx-auto overflow-y-auto">
 

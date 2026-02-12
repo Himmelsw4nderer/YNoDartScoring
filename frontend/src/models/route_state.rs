@@ -6,6 +6,7 @@ use crate::log_info;
 #[derive(Clone, PartialEq)]
 pub enum Route {
     Home,
+    Setup,
     Game,
     Win,
 }
@@ -14,6 +15,7 @@ impl Route {
     pub fn name(&self) -> &str {
         match self {
             Route::Home => "Home",
+            Route::Setup => "Setup",
             Route::Game => "Game",
             Route::Win => "Win",
         }

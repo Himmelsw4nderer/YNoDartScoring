@@ -12,14 +12,15 @@ mod models;
 mod logging;
 mod hooks;
 
-use models::{GameState, Route, RouteState};
+use models::{GameState, Route, RouteState, SetupState};
 
-use views::{GameView, HomeView, WinView};
+use views::{GameView, HomeView, WinView, SetupView};
 
 #[function_component(App)]
 fn app() -> Html {
     let route_state = use_reducer(|| RouteState::default());
     let game_state = use_reducer(|| GameState::default());
+    let setup_state = use_reducer(|| SetupState::default());
 
     let is_game_in_progress = game_state.winner.is_none() && route_state.current == Route::Game;
 
@@ -38,6 +39,7 @@ fn app() -> Html {
     html! {
         <ContextProvider<UseReducerHandle<RouteState>> context={route_state.clone()}>
         <ContextProvider<UseReducerHandle<GameState>> context={game_state}>
+        <ContextProvider<UseReducerHandle<SetupState>> context={setup_state}>
             <div class="bg-brand-bg h-dvh flex items-center justify-center">
             <div class="bg-brand-bg p-1 max-w-4xl w-full h-dvh flex flex-col">
                 <h1 class="text-4xl font-bold text-center p-3">
@@ -50,12 +52,14 @@ fn app() -> Html {
                 {
                     match route_state.current {
                         Route::Home => html! { <HomeView /> },
+                        Route::Setup => html! { <SetupView /> },
                         Route::Game => html! { <GameView /> },
                         Route::Win => html! { <WinView /> },
                     }
                 }
                 </div>
             </div>
+        </ContextProvider<UseReducerHandle<SetupState>>>
         </ContextProvider<UseReducerHandle<GameState>>>
         </ContextProvider<UseReducerHandle<RouteState>>>
     }

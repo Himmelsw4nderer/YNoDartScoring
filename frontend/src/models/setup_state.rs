@@ -52,22 +52,44 @@ impl Reducible for SetupState {
     fn reduce(self: Rc<Self>, action: Self::Action) -> Rc<Self> {
         match action {
             SetupAction::AddPlayer() => {
-                return self
+                let mut new_state = (*self).clone();
+                log_info!("Adding a new player");
+                new_state.players.push(SetupPlayer::default());
+                Rc::new(new_state)
             }
             SetupAction::RemovePlayer() => {
-                return self
+                let mut new_state = (*self).clone();
+                if new_state.players.len() > 2 {
+                    log_info!("Removing the last player");
+                    new_state.players.pop();
+                }
+                Rc::new(new_state)
             }
             SetupAction::RenamePlayer(index, name) => {
-                return self
+                let mut new_state = (*self).clone();
+                log_info!("Renaming player at index {} to {}", index, name);
+                if let Some(player) = new_state.players.get_mut(index) {
+                    player.name = name;
+                }
+                Rc::new(new_state)
             }
             SetupAction::SetStartingScore(starting_score) => {
-                return self
+                let mut new_state = (*self).clone();
+                log_info!("Setting starting score to {}", starting_score);
+                new_state.starting_score = starting_score;
+                Rc::new(new_state)
             }
             SetupAction::SetLegGoal(leg_goal) => {
-                return self
+                let mut new_state = (*self).clone();
+                log_info!("Setting leg goal to {}", leg_goal);
+                new_state.leg_goal = leg_goal;
+                Rc::new(new_state)
             }
             SetupAction::SetSetGoal(set_goal) => {
-                return self;
+                let mut new_state = (*self).clone();
+                log_info!("Setting set goal to {}", set_goal);
+                new_state.set_goal = set_goal;
+                Rc::new(new_state)
             }
         }
     }

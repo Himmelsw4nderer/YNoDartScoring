@@ -1,20 +1,18 @@
 use yew::prelude::*;
-use crate::models::{LegState, LegAction};
 use crate::log_error;
+use crate::models::{SetupState, SetupAction};
+
 
 #[function_component(StartingScoreSelector)]
 pub fn starting_score_selector() -> Html {
-    let Some(leg_state) = use_context::<UseReducerHandle<LegState>>() else {
-        log_error!("LegState context not found - cannot render StartingScoreSelector");
+    let Some(setup_state) = use_context::<UseReducerHandle<SetupState>>() else {
+        log_error!("SetupState context not found - cannot render StartingScoreSelector");
         return html! { <div>{"Error: Context not available"}</div> };
     };
 
     let starting_scores = vec![301, 501, 701, 901];
 
-    let current_score = leg_state.player_states
-        .first()
-        .map(|p| p.starting_score)
-        .unwrap_or(501);
+    let current_score = setup_state.starting_score;
 
     html! {
         <div class="w-full mb-8">
@@ -27,9 +25,9 @@ pub fn starting_score_selector() -> Html {
                         let border_class = if is_selected { "border-brand-primary" } else { "border-brand-text" };
 
                         let onclick = {
-                            let leg_state = leg_state.clone();
+                            let setup_state = setup_state.clone();
                             Callback::from(move |_| {
-                                leg_state.dispatch(LegAction::SetStartingScore(starting_score));
+                                setup_state.dispatch(SetupAction::SetStartingScore(starting_score));
                             })
                         };
 

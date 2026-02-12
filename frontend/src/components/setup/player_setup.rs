@@ -1,30 +1,30 @@
 use yew::prelude::*;
 use web_sys::HtmlInputElement;
-use crate::models::{LegState, LegAction};
+use crate::models::{SetupState, SetupAction};
 use crate::log_error;
 
 #[function_component(PlayerSetup)]
 pub fn player_setup() -> Html {
-    let Some(leg_state) = use_context::<UseReducerHandle<LegState>>() else {
-        log_error!("LegState context not found - cannot render PlayerSetup");
+    let Some(setup_state) = use_context::<UseReducerHandle<SetupState>>() else {
+        log_error!("SetupState context not found - cannot render PlayerSetup");
         return html! { <div>{"Error: Context not available"}</div> };
     };
 
-    let player_count = leg_state.player_states.len();
+    let player_count = setup_state.players.len();
 
     let on_add_player = {
-        let leg_state = leg_state.clone();
+        let setup_state = setup_state.clone();
         Callback::from(move |_| {
-            leg_state.dispatch(LegAction::AddPlayer);
+            setup_state.dispatch(SetupAction::AddPlayer());
         })
     };
 
     let on_remove_player = {
-        let leg_state = leg_state.clone();
+        let setup_state = setup_state.clone();
         let player_count = player_count;
         Callback::from(move |_| {
             if player_count > 1 {
-                leg_state.dispatch(LegAction::RemovePlayer(player_count - 1));
+                setup_state.dispatch(SetupAction::RemovePlayer());
             }
         })
     };
@@ -60,12 +60,12 @@ pub fn player_setup() -> Html {
 
             <div class="space-y-3">
                 {
-                    leg_state.player_states.iter().enumerate().map(|(index, player)| {
+                    setup_state.players.iter().enumerate().map(|(index, player)| {
                         let on_name_change = {
-                            let leg_state = leg_state.clone();
+                            let setup_state = setup_state.clone();
                             Callback::from(move |e: InputEvent| {
                                 let input: HtmlInputElement = e.target_unchecked_into();
-                                leg_state.dispatch(LegAction::SetPlayerName(index, input.value()));
+                                setup_state.dispatch(SetupAction::RenamePlayer(index, input.value()));
                             })
                         };
 
