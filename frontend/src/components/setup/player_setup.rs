@@ -21,11 +21,8 @@ pub fn player_setup() -> Html {
 
     let on_remove_player = {
         let setup_state = setup_state.clone();
-        let player_count = player_count;
         Callback::from(move |_| {
-            if player_count > 1 {
-                setup_state.dispatch(SetupAction::RemovePlayer());
-            }
+            setup_state.dispatch(SetupAction::RemovePlayer());
         })
     };
 
@@ -37,7 +34,7 @@ pub fn player_setup() -> Html {
                 <div class="relative flex items-center w-full max-w-[200px]">
                     <button
                         onclick={on_remove_player}
-                        disabled={player_count <= 2|| true}
+                        disabled={player_count <= 2}
                         class="absolute left-0 w-10 h-10 bg-brand-bg border-2 border-brand-text text-brand-text"
                     >
                         <i class="ti ti-minus"></i>
@@ -50,7 +47,7 @@ pub fn player_setup() -> Html {
                     />
                     <button
                         onclick={on_add_player}
-                        disabled={player_count >= 10 || true}
+                        disabled={player_count >= 10}
                         class="absolute right-0 w-10 h-10 bg-brand-bg border-2 border-brand-text text-brand-text"
                     >
                         <i class="ti ti-plus"></i>
