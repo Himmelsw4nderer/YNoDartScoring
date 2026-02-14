@@ -70,4 +70,17 @@ impl GamePlayer {
         }
         result
     }
+
+    pub fn new(name: String, first_to_sets: i32, first_to_legs: i32,starting_score: i32) -> Self {
+        let sets = vec![Set::new(first_to_legs, starting_score)];
+
+        Self {
+            name: name,
+            sets: sets,
+            average: 0.0,
+            is_won: false,
+            sets_won: 0,
+            first_to_sets: first_to_sets,
+        }
+    }
 }

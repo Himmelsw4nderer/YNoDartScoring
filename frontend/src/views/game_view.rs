@@ -6,7 +6,7 @@ use crate::log_error;
 #[function_component(GameView)]
 pub fn game_view() -> Html {
     let Some(game_state) = use_context::<UseReducerHandle<GameState>>() else {
-        log_error!("LegState context not found - cannot render GameView");
+        log_error!("GameState context not found - cannot render GameView");
         return html! { <div>{"Error: Context not available"}</div> };
     };
 
