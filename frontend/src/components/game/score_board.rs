@@ -1,12 +1,43 @@
 use yew::prelude::*;
 use crate::components::game::score_card::ScoreCard;
+use crate::models::GameState;
+use crate::log_error;
 
 #[function_component(ScoreBoard)]
 pub fn score_board() -> Html {
-    html! {
-        <div class="score-board flex gap-4">
-            <ScoreCard player_index={0} />
-            <ScoreCard player_index={1} />
-        </div>
+    let Some(game_state) = use_context::<UseReducerHandle<GameState>>() else {
+        log_error!("GameState context not found - cannot render ScoreBoard");
+        return html! { <div>{"Error: Context not available"}</div> };
+    };
+
+    let player_count = game_state.players.len();
+
+    if player_count == 0 {
+        html! {
+            <div class="score-board flex gap-4">
+                <div>{"No players configured"}</div>
+            </div>
+        }
+    } else if player_count == 1 {
+        html! {
+            <div class="score-board flex gap-4">
+                <div class="w-full"><ScoreCard player_index={0} /></div>
+            </div>
+        }
+    } else if player_count == 2 {
+        html! {
+            <div class="score-board flex gap-4">
+                <div class="w-1/2"><ScoreCard player_index={0} /></div>
+                <div class="w-1/2"><ScoreCard player_index={1} /></div>
+            </div>
+        }
+    } else {
+        html! {
+            <div class="score-board grid gap-4 grid-cols-3">
+                { for (0..player_count).map(|i| html! {
+                    <div class="w-full"><ScoreCard player_index={i} /></div>
+                }) }
+            </div>
+        }
     }
 }
