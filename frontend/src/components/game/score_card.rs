@@ -4,7 +4,6 @@ use crate::checkout::recommend_throws;
 use crate::models::{GameState};
 use crate::log_error;
 
-
 #[derive(Properties, PartialEq)]
 pub struct ScoreCardProps {
     pub player_index: usize,
