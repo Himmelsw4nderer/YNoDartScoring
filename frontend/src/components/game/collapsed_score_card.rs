@@ -1,10 +1,14 @@
 use yew::prelude::*;
-use crate::checkout::recommend_throws;
 use crate::models::{GameState};
 use crate::log_error;
 
-#[function_component(ScoreCard)]
-pub fn score_card(props: &ScoreCardProps) -> Html {
+#[derive(Properties, PartialEq)]
+pub struct CollapsedScoreCardProps {
+    pub player_index: usize,
+}
+
+#[function_component(CollapsedScoreCard)]
+pub fn score_card(props: &CollapsedScoreCardProps) -> Html {
 
     let Some(game_state) = use_context::<UseReducerHandle<GameState>>() else {
         log_error!("LegState context not found - cannot render ScoreCard");
@@ -14,9 +18,6 @@ pub fn score_card(props: &ScoreCardProps) -> Html {
     let is_turn = game_state.current_player == props.player_index;
 
     let score = game_state.get_leg_score(Some(props.player_index), None, None).unwrap_or(0);
-    let is_bust = game_state.is_leg_bust(Some(props.player_index), None, None).unwrap_or(false);
-
-    let latest_visit = game_state.get_latest_visit(Some(props.player_index), None, None);
 
     let legs_won = game_state.get_legs_won(Some(props.player_index), None).unwrap_or(0);
     let sets_won = game_state.get_sets_won(Some(props.player_index)).unwrap_or(0);
