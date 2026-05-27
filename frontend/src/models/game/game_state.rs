@@ -117,7 +117,15 @@ impl Reducible for GameState {
                 let players: Vec<GamePlayer> = setup_state
                     .players
                     .into_iter()
-                    .map(|player| GamePlayer::new(player.name, setup_state.set_goal, setup_state.leg_goal, setup_state.starting_score))
+                    .enumerate()
+                    .map(|(index, player)| {
+                        let name = if player.name.trim().is_empty() {
+                            format!("Player {}", index + 1)
+                        } else {
+                            player.name
+                        };
+                        GamePlayer::new(name, setup_state.set_goal, setup_state.leg_goal, setup_state.starting_score)
+                    })
                     .collect();
 
                 let new_state = GameState::new(players, 0);
