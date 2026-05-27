@@ -3,12 +3,6 @@ use crate::checkout::recommend_throws;
 use crate::models::{GameState};
 use crate::log_error;
 
-
-#[derive(Properties, PartialEq)]
-pub struct ScoreCardProps {
-    pub player_index: usize,
-}
-
 #[function_component(ScoreCard)]
 pub fn score_card(props: &ScoreCardProps) -> Html {
 
@@ -26,12 +20,6 @@ pub fn score_card(props: &ScoreCardProps) -> Html {
 
     let legs_won = game_state.get_legs_won(Some(props.player_index), None).unwrap_or(0);
     let sets_won = game_state.get_sets_won(Some(props.player_index)).unwrap_or(0);
-
-    let visit_recommendation = if is_bust {
-        latest_visit.map(|v| v.throws).unwrap_or_default()
-    } else {
-        recommend_throws(score, latest_visit)
-    };
 
     let started = game_state.has_player_started_leg(Some(props.player_index), None, None).unwrap_or(false);
 
