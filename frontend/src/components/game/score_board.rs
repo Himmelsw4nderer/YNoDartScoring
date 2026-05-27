@@ -37,7 +37,7 @@ pub fn score_board() -> Html {
             <div class="score-board flex gap-4">
                 <div class="w-1/2"><ScoreCard player_index={game_state.current_player} /></div>
                 <div class="w-1/2 h-full flex flex-wrap gap-2">
-                    { for game_state.players.iter().enumerate().filter(|(i, _)| *i != game_state.current_player).map(|(i, _)| html! {
+                    { for game_state.players.iter().enumerate().map(|(i, _)| html! {
                         <CollapsedScoreCard player_index={i} />
                     }) }
                 </div>
