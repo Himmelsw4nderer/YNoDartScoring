@@ -34,7 +34,7 @@ pub fn player_setup() -> Html {
                 <div class="relative flex items-center w-full max-w-[200px]">
                     <button
                         onclick={on_remove_player}
-                        disabled={player_count <= 2}
+                        disabled={player_count <= 1}
                         class="absolute left-0 w-10 h-10 bg-brand-bg border-2 border-brand-text text-brand-text"
                     >
                         <i class="ti ti-minus"></i>

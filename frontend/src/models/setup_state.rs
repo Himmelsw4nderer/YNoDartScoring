@@ -53,13 +53,15 @@ impl Reducible for SetupState {
         match action {
             SetupAction::AddPlayer() => {
                 let mut new_state = (*self).clone();
-                log_info!("Adding a new player");
-                new_state.players.push(SetupPlayer::default());
+                if new_state.players.len() < 4{
+                    log_info!("Adding a new player");
+                    new_state.players.push(SetupPlayer::default());
+                }
                 Rc::new(new_state)
             }
             SetupAction::RemovePlayer() => {
                 let mut new_state = (*self).clone();
-                if new_state.players.len() > 2 {
+                if new_state.players.len() > 1 {
                     log_info!("Removing the last player");
                     new_state.players.pop();
                 }
