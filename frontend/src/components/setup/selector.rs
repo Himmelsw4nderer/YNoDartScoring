@@ -76,7 +76,7 @@ pub fn first_to_legs_selector() -> Html {
         return html! { <div>{"Error: Context not available"}</div> };
     };
 
-    let first_to_legs_values = vec![1, 2, 3];
+    let first_to_legs_values = vec![1, 2, 3, 5];
     let selected_value = setup_state.leg_goal;
 
     let on_select = {
