@@ -4,7 +4,6 @@ use crate::checkout::recommend_throws;
 use crate::models::{GameState};
 use crate::log_error;
 
-
 #[derive(Properties, PartialEq)]
 pub struct ScoreCardProps {
     pub player_index: usize,
@@ -45,13 +44,13 @@ pub fn score_card(props: &ScoreCardProps) -> Html {
     let darts_thrown = game_state.get_darts_thrown(Some(props.player_index), None, None).unwrap_or(0);
 
     html! {
-        <div class={format!("border-y-4 p-3 w-1/2 {}",
-            if is_turn {
-                "border-brand-primary"
-            } else {
-                "border-brand-text"
-            }
-        )}>
+        <div class={format!("border-y-4 p-3 {}",
+                    if is_turn {
+                        "border-brand-primary"
+                    } else {
+                        "border-brand-text"
+                    }
+                )}>
         <div class="flex gap-2">
             <div class="text-brand-text text-xl">{&player.name}</div>
             {if started {
