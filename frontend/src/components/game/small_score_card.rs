@@ -1,5 +1,4 @@
 use yew::prelude::*;
-use crate::utils::translate_multiplier_to_char;
 use crate::checkout::recommend_throws;
 use crate::models::{GameState};
 use crate::log_error;
@@ -24,6 +23,9 @@ pub fn score_card(props: &ScoreCardProps) -> Html {
     let is_bust = game_state.is_leg_bust(Some(props.player_index), None, None).unwrap_or(false);
 
     let latest_visit = game_state.get_latest_visit(Some(props.player_index), None, None);
+
+    let legs_won = game_state.get_legs_won(Some(props.player_index), None).unwrap_or(0);
+    let sets_won = game_state.get_sets_won(Some(props.player_index)).unwrap_or(0);
 
     let visit_recommendation = if is_bust {
         latest_visit.map(|v| v.throws).unwrap_or_default()
@@ -68,6 +70,7 @@ pub fn score_card(props: &ScoreCardProps) -> Html {
             </tr>
         </tbody>
         </table>
+        </div>
         </div>
         </div>
     }
