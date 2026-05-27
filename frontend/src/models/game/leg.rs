@@ -14,17 +14,7 @@ pub struct Leg {
 
 impl Default for Leg {
     fn default() -> Self {
-        let starting_score = 501;
-        Self {
-            visits: [Visit::default()].to_vec(),
-            winner: None,
-            starting_score: starting_score,
-            score: starting_score,
-            is_bust: false,
-            leg_average: 0.0,
-            darts_thrown: 0,
-            is_won: false,
-        }
+        Leg::new(501)
     }
 }
 
@@ -99,5 +89,18 @@ impl Leg {
             return Some(second_to_last_visit.get_score());
         }
         None
+    }
+
+    pub fn new(starting_score: i32) -> Self {
+        Self {
+            visits: [Visit::default()].to_vec(),
+            winner: None,
+            starting_score: starting_score,
+            score: starting_score,
+            is_bust: false,
+            leg_average: 0.0,
+            darts_thrown: 0,
+            is_won: false,
+        }
     }
 }

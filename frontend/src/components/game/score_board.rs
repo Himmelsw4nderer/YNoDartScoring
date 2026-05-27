@@ -1,5 +1,5 @@
 use yew::prelude::*;
-use crate::components::score_card::ScoreCard;
+use crate::components::game::score_card::ScoreCard;
 
 #[function_component(ScoreBoard)]
 pub fn score_board() -> Html {

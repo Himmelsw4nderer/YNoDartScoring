@@ -12,13 +12,7 @@ pub struct Set {
 
 impl Default for Set {
     fn default() -> Self {
-        Self {
-            legs: [Leg::default()].to_vec(),
-            is_won: false,
-            set_average: 0.0,
-            legs_won: 0,
-            first_to_legs: 3,
-        }
+        Set::new(3, 501)
     }
 }
 
@@ -65,5 +59,17 @@ impl Set {
         }
 
         result
+    }
+
+    pub fn new(first_to_legs: i32, starting_score: i32) -> Self {
+        let legs = vec![Leg::new(starting_score)];
+
+        Self {
+            legs: legs,
+            is_won: false,
+            set_average: 0.0,
+            legs_won: 0,
+            first_to_legs: first_to_legs,
+        }
     }
 }

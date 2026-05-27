@@ -1,4 +1,4 @@
-use crate::models::{Throw, GamePlayer, Visit};
+use crate::models::{Throw, GamePlayer, Visit, SetupState};
 use crate::{log_info, log_error};
 use yew::prelude::*;
 use std::rc::Rc;
@@ -6,6 +6,7 @@ use std::rc::Rc;
 pub enum GameAction {
     ChangeThrow(Throw, Option<usize>, Option<usize>, Option<usize>, Option<usize>, Option<usize>),
     NextPlayer,
+    ConsumeSetupState(SetupState)
 }
 
 #[derive(Clone, PartialEq)]
@@ -22,19 +23,9 @@ pub struct GameState {
 
 impl Default for GameState {
     fn default() -> Self {
-        Self {
-            players: [GamePlayer::default(), GamePlayer::default()].to_vec(),
-            starting_player: 0,
-            current_player: 0,
-            current_set: 0,
-            current_leg: 0,
-            current_visit: 0,
-            current_throw: 0,
-            winner: None,
-        }
+        Self::new(vec![GamePlayer::default(), GamePlayer::default()], 0)
     }
 }
-
 
 impl Reducible for GameState {
     type Action = GameAction;
@@ -119,7 +110,25 @@ impl Reducible for GameState {
                     log_info!("Next player: {} -> {}", old_player, new_state.current_player);
                 }
 
+                std::rc::Rc::new(new_state)
+            }
 
+            GameAction::ConsumeSetupState(setup_state) => {
+                let players: Vec<GamePlayer> = setup_state
+                    .players
+                    .into_iter()
+                    .enumerate()
+                    .map(|(index, player)| {
+                        let name = if player.name.trim().is_empty() {
+                            format!("Player {}", index + 1)
+                        } else {
+                            player.name
+                        };
+                        GamePlayer::new(name, setup_state.set_goal, setup_state.leg_goal, setup_state.starting_score)
+                    })
+                    .collect();
+
+                let new_state = GameState::new(players, 0);
 
                 std::rc::Rc::new(new_state)
             }
@@ -302,6 +311,26 @@ impl GameState {
             if player_starts[player_index] {
                 self.current_player = player_index;
             }
+        }
+    }
+
+    pub fn new(mut players: Vec<GamePlayer>, starting_player: usize) -> Self {
+        if players.is_empty() {
+            players = vec![GamePlayer::default(), GamePlayer::default()];
+        }
+
+        let max_start = players.len().saturating_sub(1);
+        let starting_player = starting_player.min(max_start);
+
+        Self {
+            players,
+            starting_player,
+            current_player: starting_player,
+            current_set: 0,
+            current_leg: 0,
+            current_visit: 0,
+            current_throw: 0,
+            winner: None,
         }
     }
 }
