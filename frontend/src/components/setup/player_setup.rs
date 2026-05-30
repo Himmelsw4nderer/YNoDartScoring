@@ -28,31 +28,40 @@ pub fn player_setup() -> Html {
 
     html! {
         <div class="w-full mb-8">
-            <h2 class="text-2xl text-brand-text font-bold mb-4 text-center">{ "Players" }</h2>
-
-            <div class="flex items-center justify-center mb-6">
-                <div class="relative flex items-center w-full max-w-[200px]">
-                    <button
-                        onclick={on_remove_player}
-                        disabled={player_count <= 1}
-                        class="absolute left-0 w-10 h-10 bg-brand-bg border-2 border-brand-text text-brand-text"
-                    >
-                        <i class="ti ti-minus"></i>
-                    </button>
-                    <input
-                        type="number"
-                        readonly=true
-                        value={player_count.to_string()}
-                        class="w-full h-10 text-center bg-brand-bg border-y-2 border-brand-text text-brand-text font-bold text-xl focus:outline-none"
-                    />
-                    <button
-                        onclick={on_add_player}
-                        disabled={player_count >= 10}
-                        class="absolute right-0 w-10 h-10 bg-brand-bg border-2 border-brand-text text-brand-text"
-                    >
-                        <i class="ti ti-plus"></i>
-                    </button>
-                </div>
+            <div class="text-left text-2xl flex justify-between items-center text-brand-text">
+                <table class="w-full">
+                    <tr>
+                    <td class="flex-1">
+                        { "Players" }
+                    </td>
+                    <td class="flex-1 text-right">
+                        <div class="flex items-center justify-end h-full">
+                            <div class="relative flex items-center w-full h-full">
+                                <button
+                                    onclick={on_remove_player}
+                                    disabled={player_count <= 1}
+                                    class="absolute left-0 w-10 h-10 bg-brand-bg border-x border-brand-text text-brand-text"
+                                >
+                                    <i class="ti ti-minus"></i>
+                                </button>
+                                <input
+                                    type="number"
+                                    readonly=true
+                                    value={player_count.to_string()}
+                                    class="w-10 h-10 text-center bg-brand-bg border-brand-text text-brand-text font-bold text-xl focus:outline-none"
+                                />
+                                <button
+                                    onclick={on_add_player}
+                                    disabled={player_count >= 10}
+                                    class="absolute right-0 w-10 h-10 bg-brand-bg border-l border-brand-text text-brand-text"
+                                >
+                                    <i class="ti ti-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                        </td>
+                    </tr>
+                </table>
             </div>
 
             <div class="space-y-3">

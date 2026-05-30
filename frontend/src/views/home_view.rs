@@ -30,7 +30,7 @@ pub fn home_view() -> Html {
                     </button>
                 </td>
                 <td class="w-1/2 p-0">
-                    <button disabled={true} class="h-full w-full bg-brand-secondary text-brand-text rounded-tr-2xl flex flex-col">
+                    <button onclick={navigator(Route::OnlineLobby)} class="h-full w-full bg-brand-secondary text-brand-text rounded-tr-2xl flex flex-col hover:opacity-90 transition-opacity">
                         <div class="text-left p-3 font-bold text-2xl flex justify-between items-center">
                             <table class="w-full">
                                 <tr>

@@ -13,13 +13,21 @@ pub struct SelectorProps {
 #[function_component(Selector)]
 pub fn selector(props: &SelectorProps) -> Html {
     html! {
-        <div class="w-full mb-8">
-            <h2 class="text-2xl text-brand-text font-bold mb-4 text-center">{ &props.title }</h2>
-            <div class="grid grid-cols-4 gap-2">
+        <div class="w-full text-brand-text pt-1 border-brand-text">
+            <div class="text-left p-3 text-2xl flex justify-between items-center">
+                <table class="w-full">
+                    <tr>
+                        <td class="flex-1">
+                            {props.title.clone()}
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="grid grid-cols-4">
                 {
                     props.values.iter().map(|value| {
                         let is_selected = *value == props.selected_value;
-                        let bg_class = if is_selected { "bg-brand-primary" } else { "bg-brand-bg" };
+                        let text_class = if is_selected { "text-brand-primary" } else { "text-brand-text" };
                         let border_class = if is_selected { "border-brand-primary" } else { "border-brand-text" };
 
                         let onclick = {
@@ -31,7 +39,7 @@ pub fn selector(props: &SelectorProps) -> Html {
                         };
 
                         html! {
-                            <button {onclick} class={format!("py-3 rounded text-xl font-bold border-2 {} {} text-brand-text transition-colors", bg_class, border_class)}>
+                            <button {onclick} class={format!("py-3 mx-0 text-xl font-bold border-t {} {} transition-colors", border_class, text_class)}>
                                 { *value }
                             </button>
                         }

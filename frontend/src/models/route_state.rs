@@ -9,6 +9,7 @@ pub enum Route {
     Setup,
     Game,
     Win,
+    OnlineLobby,
 }
 
 impl Route {
@@ -18,6 +19,7 @@ impl Route {
             Route::Setup => "Setup",
             Route::Game => "Game",
             Route::Win => "Win",
+            Route::OnlineLobby => "OnlineLobby",
         }
     }
 }

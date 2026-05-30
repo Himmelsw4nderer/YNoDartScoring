@@ -30,24 +30,46 @@ pub fn setup_view() -> Html {
     };
 
     html! {
-        <div class="flex-1 flex flex-col items-center justify-start p-4 w-full max-w-lg mx-auto overflow-y-auto">
+        <div class="items-center justify-start p-y-4 w-full max-w-lg mx-auto overflow-y-auto border-brand-text">
 
-            <StartingScoreSelector />
+            <table class="border-separate border-spacing-1 w-full">
+            <tr class="p-0">
+                <td colspan=3><div class="border rounded-t-2xl border-brand-text">
+                    <StartingScoreSelector/>
+                </div></td>
+            </tr>
 
-            <FirstToLegsSelector />
+            <tr class="p-0">
+                <td colspan=3><div class="border border-brand-text">
+                    <FirstToLegsSelector />
+                </div></td>
+            </tr>
 
-            <FirstToSetsSelector />
+            <tr class="p-0">
+                <td colspan=3><div class="border border-brand-text">
+                    <FirstToSetsSelector />
+                </div></td>
+            </tr>
 
-            <PlayerSetup />
+            <tr class="p-0">
+                <td colspan=3><div class="border border-brand-text">
+                    <PlayerSetup />
+                </div></td>
+            </tr>
 
-            <div class="mt-auto w-full flex gap-4">
-                 <button onclick={navigator(Route::Home)} class="flex-1 py-3 bg-brand-bg text-brand-text font-bold rounded border-2 border-brand-primary uppercase tracking-wider">
-                    { "Back" }
-                </button>
-                <button onclick={on_start} class="flex-[2] py-3 bg-brand-secondary text-brand-text font-bold rounded border-2 border-brand-secondary uppercase tracking-wider">
-                    { "Start Game" }
-                </button>
-            </div>
+            <tr class="p-0">
+                <td colspan=1>
+                        <button onclick={navigator(Route::Home)} class="text-2xl text-left w-full p-3 bg-brand-bg text-brand-text border border-brand-primary bg-brand-primary rounded-bl-2xl">
+                            { "Back" }
+                        </button>
+                    </td>
+                    <td colspan=2>
+                        <button onclick={on_start} class="text-2xl text-right w-full p-3 bg-brand-secondary text-brand-text border border-brand-secondary rounded-br-2xl">
+                            { "Start Game" }
+                        </button>
+                    </td>
+                </tr>
+            </table>
         </div>
     }
 }
