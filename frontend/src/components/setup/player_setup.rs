@@ -27,11 +27,11 @@ pub fn player_setup() -> Html {
     };
 
     html! {
-        <div class="w-full mb-8">
-            <div class="text-left text-2xl flex justify-between items-center text-brand-text">
-                <table class="w-full">
+        <div class="w-full pt-1">
+            <div class="text-left  text-2xl flex justify-between items-center">
+                <table class="w-full text-brand-text">
                     <tr>
-                    <td class="flex-1">
+                    <td class="flex-1 p-3">
                         { "Players" }
                     </td>
                     <td class="flex-1 text-right">
@@ -48,7 +48,7 @@ pub fn player_setup() -> Html {
                                     type="number"
                                     readonly=true
                                     value={player_count.to_string()}
-                                    class="w-10 h-10 text-center bg-brand-bg border-brand-text text-brand-text font-bold text-xl focus:outline-none"
+                                    class="w-full h-10 text-center bg-brand-bg border-brand-text text-brand-text font-bold text-xl focus:outline-none"
                                 />
                                 <button
                                     onclick={on_add_player}
@@ -64,7 +64,7 @@ pub fn player_setup() -> Html {
                 </table>
             </div>
 
-            <div class="space-y-3">
+            <div class="">
                 {
                     setup_state.players.iter().enumerate().map(|(index, player)| {
                         let on_name_change = {
@@ -76,17 +76,23 @@ pub fn player_setup() -> Html {
                         };
 
                         html! {
-                            <div class="relative" key={index}>
-                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <i class="ti ti-user text-brand-text"></i>
-                                </div>
-                                <input
-                                    type="text"
-                                    value={player.name.clone()}
-                                    oninput={on_name_change}
-                                    placeholder={format!("Player {}", index + 1)}
-                                    class="w-full bg-brand-bg border-2 border-brand-text text-brand-text rounded py-2 pl-10 pr-4 focus:outline-none focus:border-brand-primary placeholder-brand-text/50"
-                                />
+                            <div class="relative bg-brand-bg border-t text-brand-text border-brand-text focus-within:border-brand-primary focus-within:text-brand-primary" key={index}>
+                            <table class="w-full">
+                                <tr>
+                                <td class="w-10 px-3 py-2 pointer-events-none align-middle">
+                                    <i class="ti ti-user"></i>
+                                </td>
+                                    <td class="align-middle">
+                                        <input
+                                            type="text"
+                                            value={player.name.clone()}
+                                            oninput={on_name_change}
+                                            placeholder={format!("Player {}", index + 1)}
+                                            class="w-full py-2 bg-brand-bg text-brand-text focus:outline-none placeholder-brand-text/50"
+                                        />
+                                    </td>
+                                </tr>
+                            </table>
                             </div>
                         }
                     }).collect::<Html>()
