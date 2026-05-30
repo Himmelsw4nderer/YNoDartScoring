@@ -14,7 +14,7 @@ mod hooks;
 
 use models::{GameState, Route, RouteState, SetupState};
 
-use views::{GameView, HomeView, WinView, SetupView, LobbyView};
+use views::{GameView, HomeView, WinView, SetupView, SetupJoinView};
 
 #[function_component(App)]
 fn app() -> Html {
@@ -55,7 +55,7 @@ fn app() -> Html {
                         Route::Setup => html! { <SetupView /> },
                         Route::Game => html! { <GameView /> },
                         Route::Win => html! { <WinView /> },
-                        Route::OnlineLobby => html! { <LobbyView /> },
+                        Route::OnlineLobby => html! { <SetupJoinView /> },
                     }
                 }
                 </div>

@@ -7,3 +7,4 @@ pub use setup::player_setup::PlayerSetup;
 pub use setup::selector::StartingScoreSelector;
 pub use setup::selector::FirstToLegsSelector;
 pub use setup::selector::FirstToSetsSelector;
+pub use setup::join_form::JoinForm;
