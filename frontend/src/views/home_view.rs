@@ -8,7 +8,7 @@ pub fn home_view() -> Html {
 
 
     html! {
-        <table class="border-separate border-spacing-1">
+        <table class="border-separate border-spacing-1 w-full">
             <tr>
                 <td class="w-1/2 p-0">
                     <button onclick={navigator(Route::Setup)} class="w-full h-full bg-brand-primary text-brand-text rounded-tl-2xl flex flex-col">

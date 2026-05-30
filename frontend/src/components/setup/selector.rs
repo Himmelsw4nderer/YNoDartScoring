@@ -13,7 +13,7 @@ pub struct SelectorProps {
 #[function_component(Selector)]
 pub fn selector(props: &SelectorProps) -> Html {
     html! {
-        <div class="w-full text-brand-text pt-1 border-brand-text">
+        <div class="w-full text-brand-text border-brand-text">
             <div class="text-left p-3 text-2xl flex justify-between items-center">
                 <table class="w-full">
                     <tr>
@@ -39,7 +39,7 @@ pub fn selector(props: &SelectorProps) -> Html {
                         };
 
                         html! {
-                            <button {onclick} class={format!("py-3 mx-0 text-xl font-bold border-t {} {} transition-colors", border_class, text_class)}>
+                            <button {onclick} class={format!("py-3 mx-0 text-sm font-bold border-t {} {} transition-colors", border_class, text_class)}>
                                 { *value }
                             </button>
                         }
