@@ -16,6 +16,8 @@ use models::{GameState, Route, RouteState, SetupState};
 
 use views::{GameView, HomeView, WinView, SetupView, SetupJoinView};
 
+use crate::views::SetupLobbyView;
+
 #[function_component(App)]
 fn app() -> Html {
     let route_state = use_reducer(|| RouteState::default());
@@ -55,7 +57,8 @@ fn app() -> Html {
                         Route::Setup => html! { <SetupView /> },
                         Route::Game => html! { <GameView /> },
                         Route::Win => html! { <WinView /> },
-                        Route::OnlineLobby => html! { <SetupJoinView /> },
+                        Route::SetupLobby => html! { <SetupLobbyView /> },
+                        Route::SetupJoin => html! { <SetupJoinView /> },
                     }
                 }
                 </div>
